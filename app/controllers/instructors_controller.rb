@@ -33,7 +33,7 @@ class InstructorsController < ApplicationController
   def destroy
     @instructor = Instructor.find(params[:id])
     @instructor.destroy
-    redirect_to "/instructor", status: :see_other
+    redirect_to instructor_index_path, status: :see_other
   end
 
   private

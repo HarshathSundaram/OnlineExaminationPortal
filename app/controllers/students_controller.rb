@@ -33,7 +33,7 @@ class StudentsController < ApplicationController
   def destroy
     @student = Student.find(params[:id])
     @student.destroy
-    redirect_to "/student", status: :see_other
+    redirect_to student_index_path, status: :see_other
   end
 
   private

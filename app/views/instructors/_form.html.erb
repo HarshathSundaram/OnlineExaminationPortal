@@ -2,10 +2,20 @@
 <div>
     <%=form.label :name%>
     <%=form.text_field :name%>
+    <%@instructor.errors.full_messages_for(:name).each do |message|%>
+            <div>
+                <p style="color:red;"><%=message%></p>
+            </div>
+    <%end%>
 </div>
 <div>
     <%=form.label :email%>
     <%=form.text_field :email%>
+    <%@instructor.errors.full_messages_for(:email).each do |message|%>
+            <div>
+                <p style="color:red;"><%=message%></p>
+            </div>
+    <%end%>
 </div>
 <div>
     <%= form.label :gender%>

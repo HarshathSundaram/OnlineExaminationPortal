@@ -2,10 +2,20 @@
     <div>
         <%= form.label :name%>
         <%= form.text_field :name%>
+        <%@student.errors.full_messages_for(:name).each do |message|%>
+            <div>
+                <p style="color:red;"><%=message%></p>
+            </div>
+        <%end%>
     </div>
     <div>
         <%= form.label :email%>
         <%= form.text_field :email%>
+        <%@student.errors.full_messages_for(:email).each do |message|%>
+            <div>
+                <p style="color:red;"><%=message%></p>
+            </div>
+        <%end%>
     </div>
     <div>
         <%= form.label :gender%>
@@ -14,6 +24,11 @@
     <div>
         <%= form.label :department%>
         <%= form.text_field :department%>
+        <%@student.errors.full_messages_for(:department).each do |message|%>
+            <div>
+                <p style="color:red;"><%=message%></p>
+            </div>
+        <%end%>
     </div>
     <div>
         <%= form.label :year%>

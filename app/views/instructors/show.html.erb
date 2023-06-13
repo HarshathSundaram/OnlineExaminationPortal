@@ -3,4 +3,8 @@
 <h5><%= @instructor.gender%></h5>
 <h5><%= @instructor.designation%></h5>
 <%= link_to "Edit", edit_instructor_path(@instructor) %>
+<%= link_to "Delete", delete_instructor_path(@instructor), data:{
+    turbo_method: :delete,
+    turbo_confirm: "Are You sure?"
+} %>
 
