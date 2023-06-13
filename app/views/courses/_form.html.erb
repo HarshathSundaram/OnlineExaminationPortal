@@ -1,0 +1,23 @@
+<%= form_with model:  [@instructor, @course] do |form| %>
+    <div>
+        <%=form.label :name%>
+        <%=form.text_field :name%>
+        <%@course.errors.full_messages_for(:name).each do |message|%>
+            <div>
+                <p style="color:red;"><%=message%></p>
+            </div>
+        <%end%>
+    </div>
+    <div>
+        <%=form.label :category%>
+        <%=form.text_field :category%>
+        <%@course.errors.full_messages_for(:category).each do |message|%>
+            <div>
+                <p style="color:red;"><%=message%></p>
+            </div>
+        <%end%>
+    </div>
+    <div>
+        <%=form.submit%>
+    </div>
+<%end%> 

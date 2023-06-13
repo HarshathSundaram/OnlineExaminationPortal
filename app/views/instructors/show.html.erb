@@ -1,10 +1,32 @@
 <h1><%= @instructor.name%> </h1>
-<h5><%= @instructor.email%></h5>
-<h5><%= @instructor.gender%></h5>
-<h5><%= @instructor.designation%></h5>
+<p><%= @instructor.email%></p>
+<p><%= @instructor.gender%></p>
+<p><%= @instructor.designation%></p>
 <%= link_to "Edit", edit_instructor_path(@instructor) %>
-<%= link_to "Delete", delete_instructor_path(@instructor), data:{
+<%= link_to "Delete", instructor_path(@instructor), data:{
     turbo_method: :delete,
     turbo_confirm: "Are You sure?"
 } %>
 
+<%if @instructor.courses.blank?%>
+    <h3> There is no course handled by <%= @instructor.name%> </h3>
+<%else%>
+    <p>Courses Handled by <%= @instructor.name%></p>
+    <ul>
+        <% @instructor.courses.each do |course|%>
+           <li>
+                <ol style="list-style-type:none;">
+                    <li> Course Name: <%= course.name%> </li>
+                    <li> Course Category: <%= course.category%></li>
+                    <li><%= link_to "Edit Course", edit_instructor_course_path(@instructor,course) %></li>
+                    <li><%= link_to "Delete Course",instructor_course_path(@instructor, course), data:{
+                        turbo_method: 'delete',
+                        turbo_confirm: 'Are You Sure?'
+                    } %></li>
+                </ol>
+           </li>
+        <%end%>
+    </ul>
+<%end%>
+
+<%= link_to "New Course", new_instructor_course_path(@instructor) %>

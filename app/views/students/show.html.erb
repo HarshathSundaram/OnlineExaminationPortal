@@ -5,7 +5,8 @@
 <h3><%= @student.year%></h3>
 
 <%= link_to "Edit", edit_student_path(@student) %>
-<%= link_to "Delete", delete_student_path(@student), data:{
+<%= link_to "Delete", student_path(@student), data:{
     turbo_method: :delete,
     turbo_confirm: "Are You sure?"
 } %>
+
