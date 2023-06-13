@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  testable: one
+  testable_type: Testable
+
+two:
+  testable: two
+  testable_type: Testable

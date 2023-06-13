@@ -1,0 +1,21 @@
+<%= form_with model: @instructor do |form| %>
+<div>
+    <%=form.label :name%>
+    <%=form.text_field :name%>
+</div>
+<div>
+    <%=form.label :email%>
+    <%=form.text_field :email%>
+</div>
+<div>
+    <%= form.label :gender%>
+    <%= form.select :gender, ['Male','Female']%>   
+</div>
+<div>
+    <%=form.label :designation%>
+    <%=form.select :designation, ['Professor', 'Assisstant Professor', 'Associate Professor']%>
+</div>
+<div>
+    <%=form.submit%>
+</div>
+<% end %>
