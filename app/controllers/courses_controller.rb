@@ -1,4 +1,9 @@
 class CoursesController < ApplicationController
+
+    def show
+        @course = Course.find(params[:id])
+    end
+
     def new
         @instructor = Instructor.find(params[:instructor_id])
         @course = @instructor.courses.new

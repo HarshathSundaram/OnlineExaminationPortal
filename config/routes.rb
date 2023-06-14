@@ -6,6 +6,10 @@ Rails.application.routes.draw do
     resources :courses
   end
 
+  resources :courses do
+    resources :topics
+  end
+
   #Students Routes
   get 'students', to: 'students#index', as: 'student_index'
 

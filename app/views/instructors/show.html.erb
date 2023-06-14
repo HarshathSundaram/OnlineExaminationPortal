@@ -16,7 +16,7 @@
         <% @instructor.courses.each do |course|%>
            <li>
                 <ol style="list-style-type:none;">
-                    <li> Course Name: <%= course.name%> </li>
+                    <li><%= link_to course.name , course_path(course) %></li>
                     <li> Course Category: <%= course.category%></li>
                     <li><%= link_to "Edit Course", edit_instructor_course_path(@instructor,course) %></li>
                     <li><%= link_to "Delete Course",instructor_course_path(@instructor, course), data:{

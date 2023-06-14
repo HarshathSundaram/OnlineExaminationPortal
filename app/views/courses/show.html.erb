@@ -1,0 +1,27 @@
+<h1>Course: <%=@course.name%></h1>
+<h3>Instructor: <%=@course.instructor.name%></h3>
+<p>Category: <%=@course.category%></p>
+
+
+<%if @course.topics.blank?%>
+    <h3>There is no topic for <%= @course.name%></h3>
+<%else%>
+    <h3>Topics in this course are</h3>
+    <%@course.topics.each do |topic|%>
+        <ul>
+            <ol style="list-style-type:none;">
+                <li>Topic: <%= topic.name%></li>
+                <li> Description: <%= topic.description%></li>
+                <ul>
+                    <li><%= link_to "Edit Topic", edit_course_topic_path(@course,topic) %></li>
+                    <li><%= link_to "Delete Topic",course_topic_path(@course,topic), data:{
+                        turbo_method: "delete",
+                        turbo_confirm: "Are You Sure?"
+                    } %></li>
+                </ul>
+            </ol>
+        </ul>
+    <%end%>
+<%end%>
+
+<%= link_to "Add New Topic", new_course_topic_path(@course) %>
