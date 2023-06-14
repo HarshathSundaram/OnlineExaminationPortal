@@ -1,0 +1,15 @@
+<h1>List of Courses</h1>
+
+<% @courses.each do |course|%>
+    <h4>Course: <%=course.name%></h4>
+    <p>Instructor: <%=course.instructor.name%></p>
+    <p>Category: <%=course.category%>
+    <%stu = @student.courses.where(id: course.id)%>
+    <%if stu.length == 0%>
+        <p><%= link_to "Enroll", student_course_enroll_path(@student,course) %></p>
+    <%else%>
+        <p><%= link_to "UnEnroll", student_course_unenroll_path(@student,course), data:{
+            turbo_confirm: "Are You Sure?"
+        } %></p>
+    <%end%>
+<%end%>

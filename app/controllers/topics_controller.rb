@@ -1,4 +1,10 @@
 class TopicsController < ApplicationController
+
+    def show
+        @course = Course.find(params[:course_id])
+        @topic = @course.topics.find(params[:id])
+    end
+
     def new
         @course = Course.find(params[:course_id])
         @topic = @course.topics.new

@@ -10,7 +10,7 @@
     <%@course.topics.each do |topic|%>
         <ul>
             <ol style="list-style-type:none;">
-                <li>Topic: <%= topic.name%></li>
+                <li>Topic:  <%= link_to topic.name, course_topic_path(@course,topic) %></li>
                 <li> Description: <%= topic.description%></li>
                 <ul>
                     <li><%= link_to "Edit Topic", edit_course_topic_path(@course,topic) %></li>

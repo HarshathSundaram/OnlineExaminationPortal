@@ -1,12 +1,33 @@
 <h1><%= @student.name%></h1>
-<h3><%= @student.email%></h3>
-<h3><%= @student.gender%></h3>
-<h3><%= @student.department%></h3>
-<h3><%= @student.year%></h3>
+<p><%= @student.email%></p>
+<p><%= @student.gender%></p>
+<p><%= @student.department%></p>
+<p><%= @student.year%></p>
 
 <%= link_to "Edit", edit_student_path(@student) %>
 <%= link_to "Delete", student_path(@student), data:{
     turbo_method: :delete,
     turbo_confirm: "Are You sure?"
 } %>
+
+<% if @student.courses.blank?%>
+   <h3><%= @student.name%> is not enrolled in any courses </h3>
+<%else%>
+    <ul>
+        <%@student.courses.each do |course|%>
+            <li>
+                <ol style=" list-style-type:none;">
+                    <li>
+                        <h4>Course: <%= link_to course.name, student_course_course_path(@student,course) %></h4>
+                    </li>
+                    <li>
+                        <p>Instructor: <%= course.instructor.name%></p>
+                    </li>
+                </ol>
+            </li>
+        <%end%>
+    </ul>
+<%end%>
+
+<%= link_to "Enroll New Course", student_course_path(@student) %>
 

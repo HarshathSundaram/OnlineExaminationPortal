@@ -1,0 +1,18 @@
+<h1>Course: <%=@course.name%></h1>
+<h3>Instructor: <%=@course.instructor.name%></h3>
+<p>Category: <%=@course.category%></p>
+
+
+<%if @course.topics.blank?%>
+    <h3>There is no topic for <%= @course.name%></h3>
+<%else%>
+    <h3>Topics in this course are</h3>
+    <%@course.topics.each do |topic|%>
+        <ul>
+            <ol style="list-style-type:none;">
+                <li>Topic:  <%=link_to topic.name, student_course_topic_path(@student,@course,topic.id) %></li>
+                <li> Description: <%= topic.description%></li>    
+            </ol>
+        </ul>
+    <%end%>
+<%end%>
