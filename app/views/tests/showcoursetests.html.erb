@@ -1,0 +1,14 @@
+<h1>Tests in the Course <%=@course.name%></h1>
+<%if @tests.blank?%>
+    <p>There is No tests in this Course <%=@course.name%></p>
+<%else%>
+    <%@tests.each do|test|%>
+        <p><%= test.name%></p>
+        <p><%= link_to "Delete", test_course_delete_path(@course,test), data:{
+            turbo_method: "delete",
+            turbo_confirm: "Are You Sure"
+        } %></p>
+    <%end%>
+<%end%>
+
+<%= link_to "Create Test", test_course_question_path(@course) %>

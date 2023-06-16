@@ -1,0 +1,2 @@
+class TestHistoriesController < ApplicationController
+end

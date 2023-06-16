@@ -2,6 +2,19 @@
 <h3>Instructor: <%=@course.instructor.name%></h3>
 <p>Category: <%=@course.category%></p>
 
+<%= link_to "Create Test", test_course_question_path(@course) %>
+<%=link_to "View Test", test_course_path(@course)%>
+
+<%if @course.students.blank?%>
+    <p>No Students Enrolled in this course</p>
+<%else%>
+    <h3>Students Enrolled in this course</h3>
+    <ul>
+        <%@course.students.each do |stu|%>
+            <li><%= stu.name%></li>
+        <%end%>
+    </ul>
+<%end%>
 
 <%if @course.topics.blank?%>
     <h3>There is no topic for <%= @course.name%></h3>

@@ -1,3 +1,6 @@
 <h1>Topic Name: <%=@topic.name%></h1>
 <p>Topic Description: <%=@topic.description%></p>
 <p>Topic Course: <%= @topic.course.name%></p>
+
+<%= link_to "Create Test", test_topic_question_path(@topic) %>
+<%=link_to "View Test", test_topic_path(@topic)%>

@@ -5,7 +5,7 @@
     <p>List of Instructors </p>
     <ul>
         <%@instructors.each do |instructor|%>
-            <%= link_to instructor.name, instructor_path(instructor) %>
+          <li>  <%= link_to instructor.name, instructor_path(instructor) %></li>
         <%end%>
     </ul>
 <%end%>

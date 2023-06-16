@@ -1,0 +1,18 @@
+<h1>Topic: <%=@topic.name%></h1>
+<h2>Course: <%=@course.name%></h2>
+<h3>Instructor: <%=@course.instructor.name%></h3>
+
+<%if @topic.tests.blank?%>
+    <p>No Tests available for this course</p>
+<%else%>
+    <ul>
+        <%@topic.tests.each do |test|%>
+            <li>
+                <ol style="list-style-type:none;">
+                    <li><b><%=test.name%></b></li>
+                    <li><%= link_to "Take test", student_topic_tests_take_path(@student,@course,@topic,test) %></li>
+                </ol>
+            </li>
+        <%end%>
+    </ul>
+<%end%>

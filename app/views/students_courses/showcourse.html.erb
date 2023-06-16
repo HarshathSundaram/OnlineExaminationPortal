@@ -1,7 +1,7 @@
 <h1>Course: <%=@course.name%></h1>
 <h3>Instructor: <%=@course.instructor.name%></h3>
 <p>Category: <%=@course.category%></p>
-
+<%= link_to "View Tests", students_course_tests_path(@student,@course) %>  
 
 <%if @course.topics.blank?%>
     <h3>There is no topic for <%= @course.name%></h3>
@@ -11,8 +11,9 @@
         <ul>
             <ol style="list-style-type:none;">
                 <li>Topic:  <%=link_to topic.name, student_course_topic_path(@student,@course,topic.id) %></li>
-                <li> Description: <%= topic.description%></li>    
+                <li> Description: <%= topic.description%></li>  
             </ol>
         </ul>
     <%end%>
 <%end%>
+

@@ -1,0 +1,26 @@
+<h1>Course: <%=@course.name%></h1>
+<h3>Instrucor: <%=@course.instructor.name%></h3>
+<b>Test: <%=@test.name%></b>
+
+<%=form_with url:student_course_validate_path(@student,@course,@test) do |f|%>
+    <% @test.questions.each do |key, value| %>
+        <div>
+            <%= f.label "Question #{key.to_i+1}" %>
+            <b><%=value["question"]%></b>
+        </div>
+        <div>
+            
+            <%= f.radio_button :"answer_stu[#{key}]", value["options"]['0'] %>
+            <%= f.label value["options"]['0']%>
+            <%= f.radio_button :"answer_stu[#{key}]", value["options"]['1'] %>
+            <%= f.label value["options"]['1']%>
+            <%= f.radio_button :"answer_stu[#{key}]", value["options"]['2'] %>
+            <%= f.label value["options"]['2']%>
+            <%= f.radio_button :"answer_stu[#{key}]", value["options"]['3'] %>
+            <%= f.label value["options"]['3']%>
+        </div>
+    <% end %>
+    <div>
+        <%=f.submit "Submit Test"%>
+    </div>
+<%end%>

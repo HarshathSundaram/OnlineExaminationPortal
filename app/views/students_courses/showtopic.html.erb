@@ -1,3 +1,4 @@
 <h1>Topic Name: <%=@topic.name%></h1>
 <p>Topic Description: <%=@topic.description%></p>
 <p>Topic Course: <%= @topic.course.name%></p>
+<%= link_to "View Tests", students_topic_tests_path(@student,@course,@topic) %> 

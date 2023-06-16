@@ -1,0 +1,43 @@
+<h1>Create test for the course <%=@course.name%></h1>
+<%= form_with url: test_course_create_path,local: true do |form|%>
+    <div>
+        <%= form.hidden_field :id, values: @course.id%>
+        <div>
+            <%= form.label "Test Name"%>
+            <%= form.text_field :name%>
+        </div>
+        <%10.times do |i|%>
+            <div>
+                <div>
+                    <%=form.label "Question" %>
+                    <%=form.text_field :"question[#{i}]", required:true%>
+                </div>
+                <div>
+                    <%=form.label "Option 1"%>
+                    <%=form.text_field :"option[#{i}][0]", required:true%>
+                </div>
+                <div>
+                    <%=form.label "Option 2"%>
+                    <%=form.text_field :"option[#{i}][1]", required:true%>
+                </div>
+                <div>
+                    <%=form.label "Option 3"%>
+                    <%=form.text_field :"option[#{i}][2]", required:true%>
+                </div>
+                <div>
+                    <%=form.label "Option 4"%>
+                    <%=form.text_field :"option[#{i}][3]", required:true%>
+                </div>
+                <div>
+                    <%=form.label "Answer"%>
+                    <%=form.select :"answer[#{i}]",['1','2','3','4']%>
+                </div>
+                <div>
+                    <%=form.label "Mark"%>
+                    <%=form.select :"mark[#{i}]",['1','2','3','4','5']%>
+                </div>
+            </div>
+        <%end%>
+        <%= form.submit "Create Text"%>
+    </div>
+<%end%>

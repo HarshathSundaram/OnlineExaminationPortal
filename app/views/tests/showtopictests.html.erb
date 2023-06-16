@@ -1,0 +1,16 @@
+<h1>Tests in the Topic <%=@topic.name%></h1>
+<%if @tests.blank?%>
+    <p>There is No tests in this Topic <%=@topic.name%></p>
+<%else%>
+    <%@tests.each do|test|%>
+        <p><%=test.name%></p>
+        <p>
+            <p><%= link_to "Delete", test_topic_delete_path(@topic,test), data:{
+            turbo_method: "delete",
+            turbo_confirm: "Are You Sure"
+        } %></p>
+        </p>
+    <%end%>
+<%end%>
+
+<%= link_to "Create Test", test_topic_question_path(@topic) %>

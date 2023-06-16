@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_06_14_051959) do
+ActiveRecord::Schema[7.0].define(version: 2023_06_16_072635) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -48,11 +48,25 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_14_051959) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "test_histories", force: :cascade do |t|
+    t.integer "mark_scored"
+    t.integer "total_mark"
+    t.bigint "test_id", null: false
+    t.bigint "student_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.jsonb "answers", default: {}, null: false
+    t.index ["student_id"], name: "index_test_histories_on_student_id"
+    t.index ["test_id"], name: "index_test_histories_on_test_id"
+  end
+
   create_table "tests", force: :cascade do |t|
     t.string "testable_type", null: false
     t.bigint "testable_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.jsonb "questions", default: {}, null: false
     t.index ["testable_type", "testable_id"], name: "index_tests_on_testable"
   end
 
@@ -65,4 +79,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_06_14_051959) do
     t.index ["course_id"], name: "index_topics_on_course_id"
   end
 
+  add_foreign_key "test_histories", "students"
+  add_foreign_key "test_histories", "tests"
 end
