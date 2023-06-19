@@ -1,6 +1,9 @@
-<h1>Topic Name: <%=@topic.name%></h1>
-<p>Topic Description: <%=@topic.description%></p>
-<p>Topic Course: <%= @topic.course.name%></p>
-
-<%= link_to "Create Test", test_topic_question_path(@topic) %>
-<%=link_to "View Test", test_topic_path(@topic)%>
+<div class="card m-2" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title"><%=@topic.name%></h5>
+    <h6 class="card-subtitle mb-2 text-muted"><%= @topic.course.name%></h6>
+    <p class="card-text"><%=@topic.description%></p>
+    <%= link_to "Create Test", test_topic_question_path(@topic), class: "btn btn-primary" %>
+    <%=link_to "View Test", test_topic_path(@topic), class: "btn btn-info"%>
+  </div>
+</div>

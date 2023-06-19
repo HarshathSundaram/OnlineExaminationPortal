@@ -1,16 +1,20 @@
-<h1>Course Name: <%= @course.name%></h1>
-<h4>Test Name: <%= @test.name%></h4>
-
-<b>Result: <%=@result.mark_scored%>/<%=@result.total_mark%></b>
+<div class="card m-2" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Course: <%= @course.name%></h5>
+    <h6 class="card-subtitle mb-2 text-muted">Test: <%= @test.name%></h6>
+    <h6 class="card-subtitle mb-2 text-muted">Result: <%=@result.mark_scored%>/<%=@result.total_mark%></h6>
+  </div>
+</div>
 
 <% @test.questions.each do |key, value| %>
-    <div>
-        <ul style="list-style-type:none;">
-            <li>Question: <b><%=value['question']%></b></li>
-            <li>Answer: <b><%=value['answer']%></b></li>
-            <li>Your Answer: <b><%=@result.answers[key]%></b></li>
-        </ul>
+    <div class="card m-2" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">Question: <%= value['question']%></h5>
+            <h6 class="card-subtitle mb-2 text-muted">Answer: <%= value['answer']%></h6>
+            <h6 class="card-subtitle mb-2 text-muted">Your Answer: <span class= <% @result.answers[key] == value['answer']? %> "text-success" <% : %> "text-danger"><%@result.answers[key]%></span><% : %></h6>
+        </div>
     </div>
 <%end%>
 
-<%= link_to "OK", student_course_course_path(@student,@course)%>
+<%= link_to "OK", student_course_course_path(@student,@course), class: "btn btn-primary"%>
+

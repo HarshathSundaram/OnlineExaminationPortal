@@ -1,40 +1,50 @@
 <%= form_with model: @student do |form|%>
-    <div>
-        <%= form.label :name%>
-        <%= form.text_field :name%>
+    <div class="input-group m-3" style="width:30rem;">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Student Name: </span>
+        </div>
+        <%= form.text_field :name, class:"form-control"%>
         <%@student.errors.full_messages_for(:name).each do |message|%>
             <div>
                 <p style="color:red;"><%=message%></p>
             </div>
         <%end%>
     </div>
-    <div>
-        <%= form.label :email%>
-        <%= form.text_field :email%>
+    <div class="input-group m-3" style="width:30rem;">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Student Email: </span>
+        </div>
+        <%= form.text_field :email, class:"form-control"%>
         <%@student.errors.full_messages_for(:email).each do |message|%>
             <div>
                 <p style="color:red;"><%=message%></p>
             </div>
         <%end%>
     </div>
-    <div>
-        <%= form.label :gender%>
-        <%= form.select :gender, ['Male','Female']%>
+    <div class="input-group m-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Gender: </label>
+        </div>
+        <%= form.select :gender, ['Male','Female'], class:"custom-select",id:"inputGroupSelect01"%>
     </div>
-    <div>
-        <%= form.label :department%>
-        <%= form.text_field :department%>
+    <div class="input-group m-3" style="width:30rem;">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Department: </span>
+        </div>
+        <%= form.text_field :department, class:"form-control"%>
         <%@student.errors.full_messages_for(:department).each do |message|%>
             <div>
                 <p style="color:red;"><%=message%></p>
             </div>
         <%end%>
     </div>
-    <div>
-        <%= form.label :year%>
-        <%= form.select :year, ['I', 'II', 'III', 'IV', 'V']%>
+    <div class="input-group m-3">
+        <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Year: </label>
+        </div>
+        <%= form.select :year, ['I', 'II', 'III', 'IV', 'V'], class:"custom-select",id:"inputGroupSelect01"%>
     </div>
     <div>
-        <%= form.submit%>
+        <%= form.submit class:"btn btn-primary m-3"%>
     </div>
 <%end%>

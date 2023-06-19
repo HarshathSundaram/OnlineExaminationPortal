@@ -1,14 +1,19 @@
 <%= form_with model:[@course,@topic] do |form|%>
-    <div>
-        <%=form.label :name%>
-        <%=form.text_field :name%>
+    <div class="input-group m-3" style="width:30rem;">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Topic Name: </span>
+        </div>
+        <%=form.text_field :name, class:"form-control"%>
+    </div>
+    <div class="input-group m-3" style="width:30rem;">
+        <div class="input-group-prepend">
+            <span class="input-group-text">Topic Description: </span>
+        </div>
+        <%=form.text_area :description, class:"form-control"%>
     </div>
     <div>
-        <%=form.label :description%>
-        <%=form.text_area :description%>
-    </div>
-    <div>
-        <%=form.submit%>
+        <%=form.submit class:"btn btn-primary m-3"%>
     </div>
 
 <%end%>
+

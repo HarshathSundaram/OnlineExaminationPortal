@@ -1,18 +1,21 @@
-<h1>Topic: <%=@topic.name%></h1>
-<h2>Course: <%=@course.name%></h2>
-<h3>Instructor: <%=@course.instructor.name%></h3>
+<div class="card m-2" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Topic: <%=@topic.name%></h5>
+    <h6 class="card-subtitle mb-2 text-muted">Course: <%=@course.name%></h6>
+    <h6 class="card-subtitle mb-2 text-muted">Instructor: <%=@course.instructor.name%></h6>
+  </div>
+</div>
 
 <%if @topic.tests.blank?%>
-    <p>No Tests available for this course</p>
+    <p class="text-danger">No Tests available for this topic</p>
 <%else%>
-    <ul>
-        <%@topic.tests.each do |test|%>
-            <li>
-                <ol style="list-style-type:none;">
-                    <li><b><%=test.name%></b></li>
-                    <li><%= link_to "Take test", student_topic_tests_take_path(@student,@course,@topic,test) %></li>
-                </ol>
-            </li>
-        <%end%>
-    </ul>
+    <%@topic.tests.each do |test|%>
+        <div class="card m-2" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title"><%= test.name%></h5>
+                <%= link_to "Take test", student_topic_tests_take_path(@student,@course,@topic,test), class: "btn btn-primary" %>
+            </div>
+        </div>
+    <%end%>
 <%end%>
+

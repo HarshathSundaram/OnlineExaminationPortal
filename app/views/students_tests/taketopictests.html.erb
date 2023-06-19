@@ -1,27 +1,41 @@
-<h1>Topic: <%=@topic.name%></h1>
-<h2>Course: <%=@course.name%></h2>
-<h3>Instrucor: <%=@course.instructor.name%></h3>
-<b>Test: <%=@test.name%></b>
+<div class="card m-2" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Topic: <%=@topic.name%></h5>
+    <h6 class="card-subtitle mb-2 text-muted">Course: <%=@course.name%></h6>
+    <h6 class="card-subtitle mb-2 text-muted">Test: <%= @test.name%></h6>
+  </div>
+</div>  
 
 <%=form_with url:student_topic_validate_path(@student,@course,@topic,@test) do |f|%>
     <% @test.questions.each do |key, value| %>
-        <div>
-            <%= f.label "Question #{key.to_i+1}" %>
-            <b><%=value["question"]%></b>
-        </div>
-        <div>
-            
-            <%= f.radio_button :"answer_stu[#{key}]", value["options"]['0'] %>
-            <%= f.label value["options"]['0']%>
-            <%= f.radio_button :"answer_stu[#{key}]", value["options"]['1'] %>
-            <%= f.label value["options"]['1']%>
-            <%= f.radio_button :"answer_stu[#{key}]", value["options"]['2'] %>
-            <%= f.label value["options"]['2']%>
-            <%= f.radio_button :"answer_stu[#{key}]", value["options"]['3'] %>
-            <%= f.label value["options"]['3']%>
+        <div class="card m-2" style="width: 18rem;">
+            <div class="card-body">
+
+                <div>
+                    <%= f.label "Question #{key.to_i+1}:  " %>
+                    <b><%=value["question"]%></b>
+                </div>
+                <div>
+                    <%= f.radio_button :"answer_stu[#{key}]", value["options"]['0'] %>
+                    <%= f.label value["options"]['0']%>
+                </div>
+                <div>
+                    <%= f.radio_button :"answer_stu[#{key}]", value["options"]['1'] %>
+                    <%= f.label value["options"]['1']%>
+                </div>
+                <div>
+                    <%= f.radio_button :"answer_stu[#{key}]", value["options"]['2'] %>
+                    <%= f.label value["options"]['2']%>
+                </div>
+                <div>
+                    <%= f.radio_button :"answer_stu[#{key}]", value["options"]['3'] %>
+                    <%= f.label value["options"]['3']%>
+                </div>
+            </div>
         </div>
     <% end %>
     <div>
-        <%=f.submit "Submit Test"%>
+        <%=f.submit "Submit Test", class:"btn btn-primary m-3 p-2"%>
     </div>
 <%end%>
+

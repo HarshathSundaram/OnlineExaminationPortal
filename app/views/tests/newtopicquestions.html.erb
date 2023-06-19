@@ -1,43 +1,65 @@
-<h1>Create test for the topic <%=@topic.name%></h1>
+<div class="card-body">
+    <h3 class="card-title">Create test for the topic <%=@topic.name%></h3>
+</div>
+
 <%= form_with url: test_topic_create_path,local: true do |form|%>
     <div>
         <%= form.hidden_field :id, values: @topic.id%>
-        <div>
-            <%= form.label "Test Name"%>
-            <%= form.text_field :name%>
+        <div class="input-group m-3" style="width:30rem;">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Test Name</span>
+            </div>
+            <%= form.text_field :name, class:"form-control", required:true%>
         </div>
         <%10.times do |i|%>
-            <div>
-                <div>
-                    <%=form.label "Question" %>
-                    <%=form.text_field :"question[#{i}]"%>
-                </div>
-                <div>
-                    <%=form.label "Option 1"%>
-                    <%=form.text_field :"option[#{i}][0]"%>
-                </div>
-                <div>
-                    <%=form.label "Option 2"%>
-                    <%=form.text_field :"option[#{i}][1]"%>
-                </div>
-                <div>
-                    <%=form.label "Option 3"%>
-                    <%=form.text_field :"option[#{i}][2]"%>
-                </div>
-                <div>
-                    <%=form.label "Option 4"%>
-                    <%=form.text_field :"option[#{i}][3]"%>
-                </div>
-                <div>
-                    <%=form.label "Answer"%>
-                    <%=form.select :"answer[#{i}]",['1','2','3','4']%>
-                </div>
-                <div>
-                    <%=form.label "Mark"%>
-                    <%=form.select :"mark[#{i}]",['1','2','3','4','5']%>
+            <div class="card m-2" style="width: 50rem;">
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Question <%= i+1%>: </span>
+                        </div>
+                        <%=form.text_field :"question[#{i}]", required:true, class: "form-control"  %>
+                    </div>
+
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Option 1:</span>
+                        </div>
+                        <%=form.text_field :"option[#{i}][0]", required:true, class: "form-control"%>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Option 2:</span>
+                        </div>
+                        <%=form.text_field :"option[#{i}][1]", required:true, class: "form-control"%>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Option 3:</span>
+                        </div>
+                        <%=form.text_field :"option[#{i}][2]", required:true, class: "form-control"%>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Option 4:</span>
+                        </div>
+                        <%=form.text_field :"option[#{i}][3]", required:true, class: "form-control"%>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Answer(Options): </label>
+                        </div>
+                        <%=form.select :"answer[#{i}]",['1','2','3','4'], class:"custom-select",id:"inputGroupSelect01"%>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Mark: </label>
+                        </div>
+                        <%=form.select :"mark[#{i}]",['1','2','3','4','5'], class:"custom-select",id:"inputGroupSelect01"%>
+                    </div>
                 </div>
             </div>
         <%end%>
-        <%= form.submit "Create Test"%>
+        <%= form.submit "Create Test", class: "btn btn-primary m-3"%>
     </div>
 <%end%>

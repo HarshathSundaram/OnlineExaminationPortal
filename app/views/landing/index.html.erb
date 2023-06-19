@@ -1,7 +1,107 @@
-<h1>Welcome to Online Examination Portal</h1>
+<div class="container text-center fade-in">
+    <h1>Welcome to Online Examination Portal</h1>
+    <p>Choose Your role</p>
+    <div class="row mt-5">
+        <div class="col-md-6">
+            <div class="d-flex flex-column align-items-center mb-3">
+                <i class="fas fa-user-graduate fa-5x"></i>
+                <%= link_to "Student", "/students", class: "btn btn-primary btn-lg mt-2" %>
+            </div>
+        </div>
+        <div class="col-md-6">
+        <div class="d-flex flex-column align-items-center">
+            <i class="fas fa-chalkboard-teacher fa-5x text-primary"></i>
+            <%= link_to "Instructor", "/instructors", class: "btn btn-dark btn-lg mt-2" %>
+        </div>
+        </div>
+    </div>
+</div>
 
-<p>Choose Your role </p>
-<ul>
-    <li><%= link_to "Student", "/students" %></li>
-    <li><%= link_to "Instructor", "/instructors" %></li>
-</ul>
+<div class="feature-container mt-5">
+    <section class="features">
+        <div class="container text-center">
+            <h2 class="mb-4">Why Choose Our Portal?</h2>
+            <div class="row">
+            <div class="col-md-4">
+                <div class="feature-item">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <h3>Easy to Use</h3>
+                <p>Our portal is designed to provide a user-friendly experience.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-item">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h3>Comprehensive Courses</h3>
+                <p>Access a wide range of courses covering various subjects.</p>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-item">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3>Flexible Schedule</h3>
+                <p>Attend test at your own pace and convenience.</p>
+            </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+<style>
+    .fade-in {
+        opacity: 0;
+        animation: fadeInAnimation 1s ease-in forwards;
+    }
+
+    @keyframes fadeInAnimation {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+    .animated-button {
+        transition: transform 0.3s;
+    }
+
+    .animated-button:hover {
+        transform: scale(1.1);
+    }
+
+    .features {
+        background-color: #f8f8f8;
+        padding: 60px 0;
+    }
+
+    .feature-item {
+        margin-bottom: 30px;
+    }
+
+    .feature-item i {
+        font-size: 48px;
+        color: #007bff;
+        margin-bottom: 20px;
+    }
+    .feature-container {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+    }
+
+    .feature-item {
+        transform: translateY(50px);
+        animation: floatAnimation 1s ease-in-out infinite;
+    }
+
+    @keyframes floatAnimation {
+        0%,
+        100% {
+            transform: translateY(50px);
+        }
+        50% {
+            transform: translateY(0);
+        }
+    }
+</style>

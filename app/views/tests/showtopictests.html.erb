@@ -1,16 +1,23 @@
-<h1>Tests in the Topic <%=@topic.name%></h1>
+<div class="card-body">
+    <h4 class="card-title">Tests in the topic <%=@topic.name%></h4>
+</div>
+
 <%if @tests.blank?%>
-    <p>There is No tests in this Topic <%=@topic.name%></p>
+    <p class="text-danger m-3">There is No tests in this Topic <%=@topic.name%></p>
 <%else%>
     <%@tests.each do|test|%>
-        <p><%=test.name%></p>
-        <p>
-            <p><%= link_to "Delete", test_topic_delete_path(@topic,test), data:{
-            turbo_method: "delete",
-            turbo_confirm: "Are You Sure"
-        } %></p>
-        </p>
+        <div class="card m-3" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title"><%= test.name%></h5>
+                <%= link_to "Delete", test_topic_delete_path(@topic,test), data:{
+                    turbo_method: "delete",
+                    turbo_confirm: "Are You Sure"
+                }, class: "btn btn-danger" %>
+            </div>
+        </div>
     <%end%>
 <%end%>
 
-<%= link_to "Create Test", test_topic_question_path(@topic) %>
+
+<%= link_to "Create Test", test_topic_question_path(@topic), class:"btn btn-primary m-3" %>
+

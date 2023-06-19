@@ -1,15 +1,19 @@
 <%= form_with model: @instructor do |form| %>
-<div>
-    <%=form.label :name%>
-    <%=form.text_field :name%>
+<div class="input-group m-3" style="width:30rem;">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">Instructor Name: </span>
+    </div>
+    <%=form.text_field :name, class: "form-control" %>
     <%@instructor.errors.full_messages_for(:name).each do |message|%>
             <div>
                 <p style="color:red;"><%=message%></p>
             </div>
     <%end%>
 </div>
-<div>
-    <%=form.label :email%>
+<div class="input-group m-3" style="width:30rem;">
+    <div class="input-group-prepend">
+        <span class="input-group-text" id="basic-addon1">Instructor Email: </span>
+    </div>
     <%=form.text_field :email%>
     <%@instructor.errors.full_messages_for(:email).each do |message|%>
             <div>
@@ -17,15 +21,19 @@
             </div>
     <%end%>
 </div>
-<div>
-    <%= form.label :gender%>
-    <%= form.select :gender, ['Male','Female']%>   
+<div class="input-group m-3">
+    <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">Gender: </label>
+    </div>
+    <%= form.select :gender, ['Male','Female'], class:"custom-select",id:"inputGroupSelect01"%>   
+</div>
+<div class="input-group m-3">
+    <div class="input-group-prepend">
+        <label class="input-group-text" for="inputGroupSelect01">Designation: </label>
+    </div>
+    <%=form.select :designation, ['Professor', 'Assisstant Professor', 'Associate Professor'], class:"custom-select",id:"inputGroupSelect01"%>
 </div>
 <div>
-    <%=form.label :designation%>
-    <%=form.select :designation, ['Professor', 'Assisstant Professor', 'Associate Professor']%>
-</div>
-<div>
-    <%=form.submit%>
+    <%=form.submit class: "btn btn-primary m-3"%>
 </div>
 <% end %>

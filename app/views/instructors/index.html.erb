@@ -1,13 +1,23 @@
-<h1>Instructors</h1>
+<div class="card-body">
+    <h1 class="card-title">Instructors</h1>
+</div>
+
 <%if @instructors.blank?%>
-    <h2>There is no instructors</h2>
+    <p class="text-danger m-3">There is no instructors</p>
 <%else%>
-    <p>List of Instructors </p>
+    <h3 class="text-secondary m-3">List of Instructors </h3>
     <ul>
         <%@instructors.each do |instructor|%>
-          <li>  <%= link_to instructor.name, instructor_path(instructor) %></li>
+            <div class="card m-2" style="width: 18rem;">
+                <div class="card-body">
+                    <h5 class="card-title"><%=instructor.name%></h5>
+                    <h6 class="card-subtitle mb-2 text-muted"><%=instructor.designation%></h6>
+                    <%= link_to "View", instructor_path(instructor), class:"btn btn-info" %>
+                </div>
+            </div>
         <%end%>
     </ul>
 <%end%>
 
-<%= link_to "New Instructor", new_instructor_path %>
+<%= link_to "New Instructor", new_instructor_path, class:"btn btn-primary m-3" %>
+

@@ -56,5 +56,7 @@ Rails.application.routes.draw do
   get 'student/:student_id/course/:course_id/test/:test_id/test_history', to: 'test_histories#studentCourseTestHistory', as: 'student_course_test_history'
   get 'student/:student_id/course/:course_id/topic/:topic_id/test_history', to: 'test_histories#studentTopicHistory', as: 'student_topic_history'
   get 'student/:student_id/course/:course_id/topic/:topic_id/test/:test_id/test', to: 'test_histories#studentTopicTestHistory', as: 'student_topic_test_history'
-  
+  get 'student/:student_id/test_history/:test_history_id', to: 'test_histories#showTestHistory', as: 'student_test_history'
+
+
 end
