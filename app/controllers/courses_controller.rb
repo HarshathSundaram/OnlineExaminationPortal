@@ -1,4 +1,6 @@
 class CoursesController < ApplicationController
+    before_action :authenticate_user!  
+    before_action :is_instructor?
 
     def show
         @instructor = Instructor.find(params[:instructor_id])
@@ -75,5 +77,13 @@ class CoursesController < ApplicationController
     private
     def course_params
         params.require(:course).permit(:name,:category,:notes)
+    end
+
+    private
+    def is_instructor?
+        unless user_signed_in? && current_user.userable_type == "Instructor"
+            flash[:alert] = "Unauthorized action"
+            redirect_to student_path(current_user.userable_id)
+        end
     end
 end
