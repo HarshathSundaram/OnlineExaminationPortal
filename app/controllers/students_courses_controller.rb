@@ -38,8 +38,9 @@ class StudentsCoursesController < ApplicationController
             redirect_to instructor_path(current_user.userable_id)
         end
         student = Student.find(params[:student_id])
-        unless current_user.userable == student
-            flash[:alert] = "You are not allowed to access another student"
+        course = Course.find(params[:course_id])
+        unless current_user.userable == student && student.courses.include?(course)
+            flash[:alert] = "Unauthorized action"
             redirect_to student_path(current_user.userable)
         end  
     end
