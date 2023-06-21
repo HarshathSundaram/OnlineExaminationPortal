@@ -85,5 +85,13 @@ class CoursesController < ApplicationController
             flash[:alert] = "Unauthorized action"
             redirect_to student_path(current_user.userable_id)
         end
+
+        course_id = params[:course_id] || params[:id] # Choose the appropriate parameter based on your route setup
+        course = Course.find(course_id)
+        
+        unless course && course.instructor == current_user.userable
+            flash[:alert] = "You are not the instructor of this course"
+            redirect_to instructor_path(current_user.userable_id) # Redirect to a different path or handle accordingly
+        end
     end
 end
