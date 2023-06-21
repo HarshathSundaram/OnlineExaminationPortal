@@ -1,10 +1,26 @@
-<div class="card m-2" style="width: 30rem;">
-  <div class="card-body">
-    <h5 class="card-title"><%= @topic.name%></h5>
-    <h6 class="card-subtitle mb-2 text-muted"><%= @topic.course.name%></h6>
-    <p class="card-text"><%= @topic.description%></p>
-    <%= link_to "View Tests", students_topic_tests_path(@student,@course,@topic), class: "btn btn-primary" %>
+<div class="d-flex justify-content-center align-items-center mx-auto" style="height: 100vh;">
+  <div class="card m-2" style="width: 50rem;">
+    <div class="card-body">
+      <h2 class="card-title text-center display-1">
+        <%= @topic.name %>
+      </h2>
+      <h4 class="card-subtitle mb-2 text-muted"><%= @topic.course.name%></h4>
+      <h3 class="card-text"><%= @topic.description %></h3>
+      <% if @topic.notes.blank? %>
+        <p class="text-danger text-center m-2">No notes available for this course &#128532;</p>
+      <% else %>
+        <p class="text-center"><%= @topic.notes.filename %></p>
+        <%= link_to url_for(@topic.notes), class: "btn btn-primary w-100 m-2" do %>
+          <i class="fas fa-download mr-2"></i> View Notes
+        <% end %>
+      <% end %>
+      <%= link_to "View Tests", students_topic_tests_path(@student,@course,@topic), class: "btn btn-primary w-100 m-2 text-xl" %>
+    </div>
   </div>
 </div>
 
- 
+<style>
+  *{
+    font-family: 'Crimson Text', serif;
+  }
+</style> 

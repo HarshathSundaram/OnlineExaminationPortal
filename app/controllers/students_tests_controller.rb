@@ -45,7 +45,7 @@ class StudentsTestsController < ApplicationController
         @student = Student.find(params[:student_id])
         @course = @student.courses.find(params[:course_id])
         @topic = @course.topics.find(params[:topic_id])
-        @test = @topic.tests.all
+        @tests = @topic.tests.all
     end
 
     def taketopictests

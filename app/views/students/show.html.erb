@@ -1,35 +1,64 @@
-<div class="card m-2" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title"><%= @student.name%></h5>
-    <h6 class="card-subtitle mb-2 text-muted"><%= @student.email%></h6>
-    <p class="card-text"><%= @student.year%>, <%= @student.department%></p>
-    <%= link_to "Edit", edit_student_path(@student), class:"btn btn-warning" %>
-    <%= link_to "Delete", student_path(@student), data:{
-        turbo_method: :delete,
-        turbo_confirm: "Are You sure?"
-    }, class:"btn btn-danger" %>
-  </div>
+<div class="d-flex justify-content-end align-items-center">
+  <%= button_to destroy_user_session_path, method: :delete, class: "btn btn-primary" do %>
+    <span>Log Out</span>
+  <% end %>
+
+  <%= link_to "Enroll New Course", student_course_path(@student), class: "btn btn-success m-3" %>
 </div>
 
-
-<% if @student.courses.blank?%>
-   <p class="text-danger"><%= @student.name%> is not enrolled in any courses </p>
-<%else%>
-    <p class="text-secondary">Courses enrolled by <%=@student.name%></p>
-    <%@student.courses.each do |course|%>
-        <div class="card m-2" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title"><%= course.name%></h5>
-                <h6 class="card-subtitle mb-2 text-muted"><%= course.instructor.name%></h6>
-                <p class="card-text">Category: <%=course.category%></p>
-                <%=link_to "View", student_course_course_path(@student,course), class: "btn btn-info"%>
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card m-2" style="width: 25rem;">
+        <img src="https://www.w3schools.com/howto/img_avatar.png" class="card-img-top" alt="User Icon">
+        <div class="card-body text-center">
+          <h5 class="card-title"><i class="fas fa-user"></i> <span> <%=@user.name%></span></h5>
+          <p class="card-text">
+            <i class="fas fa-envelope"></i><span> <%=@user.email%></span><br>
+            <i class="fas fa-building"></i><span> <%=@student.department%></span><br>
+            <i class="fas fa-calendar-alt"></i><span> <%=@student.year%></span><br>
+            <i class="fas fa-venus-mars"></i><span> <%=@user.gender%></span>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <% if @student.latest_test.blank?%>
+        <h3 class="text-danger"><%= @user.name%> is not attended any test &#128532;</h3>
+      <%else%>
+        <div class="card m-1" style="width:18rem;">
+          <div class="card-body">
+            <p>Last Attended Test: <%=@student.latest_test.name%></p>
+            <p>Mark scored: <span class="text-dark"><%=@student.latest_test_history.mark_scored%>/<%=@student.latest_test_history.total_mark%></span></p>
+            <p class="text-muted">Taken test in : <%=@student.latest_test.testable_type%></p>
+            <%= link_to "View", student_test_history_path(@student, @student.latest_test_history), class:"btn btn-info" %>
+            <%= link_to "View all test", student_history_path(@student), class: "btn btn-info" %>
+          </div>
+        </div>
+      <%end%>
+      <% if @student.courses.blank?%>
+        <h3 class="text-danger"><%= @user.name%> is not enrolled in any courses &#128532;</h3>
+      <% else %>
+        <p class="text-secondary">Courses enrolled by <%=@user.name%></p>
+        <div class="row">
+          <%@student.courses.each do |course|%>
+          <div class="col-md-6">
+            <div class="card m-2" style="width: 20rem;">
+              <h1 class="card-image-top d-flex justify-content-center m-2 display-3"><i class="fas fa-book"></i></h1>
+              <div class="card-body text-center">
+                <h5 class="card-title"><%= course.name %></h5>
+                <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> <%= course.instructor.user.name %></h6>
+                <h6 class="card-subtitle mb-2 text-muted">Course Category: <%= course.category %></h6>
+                <%= link_to "View Course", student_course_course_path(@student,course), class: "btn btn-info w-100 m-1" %>
                 <%= link_to "UnEnroll", student_course_unenroll_path(@student,course), data:{
                     turbo_confirm: "Are You Sure?"
-                }, class: "btn btn-danger" %>
+                }, class: "btn btn-danger w-100 m-1 text-center" %>
+              </div>
             </div>
+          </div>
+        <% end %>
         </div>
-    <%end%>
-<%end%>
-
-<%= link_to "Enroll New Course", student_course_path(@student), class: "btn btn-primary m-3" %>
-
+      <% end %>
+    </div>
+  </div>
+</div>

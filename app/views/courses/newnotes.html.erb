@@ -1,0 +1,20 @@
+<h1 class="text-muted">Add new Notes</h1>
+<%=form_with url:create_course_notes_path(@instructor,@course),local: true do |form|%>
+    <div class="input-group m-3" style="width:30rem;">
+            <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Topic Notes: </span>
+            </div>
+            <%= form.file_field :notes, class: "form-control" %>
+        </div>
+        <% if @course.errors[:notes].any? %>
+            <div class="alert alert-danger m-3">
+            <% @course.errors.full_messages_for(:notes).each do |message| %>
+                <p><%= message %></p>
+            <% end %>
+            </div>
+        <% end %>
+    </div>
+    <div>
+        <%=form.submit class:"btn btn-primary m-3"%>
+    </div>
+<%end%>

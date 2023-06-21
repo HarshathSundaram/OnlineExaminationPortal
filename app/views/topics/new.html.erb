@@ -1,5 +1,36 @@
-<div class="card-body">
-    <h3 class="card-title">New Topic</h3>
-</div>
+<style>
+body{
+  background-image: url("https://images.pexels.com/photos/4491461/pexels-photo-4491461.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1");
+  background-size: cover;
+  background-position: center;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
-<%= render "form", course: @course, topic: @topic %>
+.container {
+  animation: fadeIn 3s;
+}
+</style>
+
+
+<div class="container ">
+  <div class="row d-flex justify-content-center align-items-center mx-auto" style="height: 100vh;">
+    <div class="col-md-6">
+      <div class="card opacity-25">
+        <div class="card-body">
+          <h3 class="card-title text-center">New Topic</h3>
+          <p class="card-text text-center">Enter the details below:</p>
+          <div class="form text-center mt-4">
+            <%= render "form", course: @course, topic: @topic %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

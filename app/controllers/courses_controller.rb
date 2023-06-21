@@ -1,7 +1,8 @@
 class CoursesController < ApplicationController
 
     def show
-        @course = Course.find(params[:id])
+        @instructor = Instructor.find(params[:instructor_id])
+        @course = @instructor.courses.find(params[:id])
     end
 
     def new
@@ -11,11 +12,12 @@ class CoursesController < ApplicationController
 
     def create
         @instructor = Instructor.find(params[:instructor_id])
-        @course = @instructor.courses.new(course_params)
+        @course = @instructor.courses.build(course_params)
+    
         if @course.save
-            redirect_to instructor_path(@instructor)
+            redirect_to instructor_path(@instructor), notice: "Course created successfully."
         else
-            render :new, status: :unprocessable_entity
+            render :new
         end
     end
 
@@ -41,8 +43,37 @@ class CoursesController < ApplicationController
         redirect_to instructor_path(@instructor), status: :see_other
     end
 
+    def newnotes
+        @instructor = Instructor.find(params[:instructor_id])
+        @course = @instructor.courses.find(params[:course_id])       
+    end
+
+    def createnotes
+        @instructor = Instructor.find(params[:instructor_id])
+        @course = @instructor.courses.find(params[:course_id]) 
+        notes = params[:notes]
+        @course.notes.attach(notes)
+        if @course.save
+            redirect_to instructor_course_path(@instructor,@course),notice: "Notes Added successfully"
+        else
+            render :newnotes,status: :unprocessable_entity
+        end        
+    end
+
+    def deletenotes
+        @instructor = Instructor.find(params[:instructor_id])
+        @course = @instructor.courses.find(params[:course_id])
+        
+        if @course.notes.attached?
+          @course.notes.purge
+          redirect_to instructor_course_path(@instructor,@course), notice: "Notes deleted successfully."
+        else
+          redirect_to instructor_course_path(@instructor,@course), alert: "No notes available to delete."
+        end
+    end
+
     private
     def course_params
-        params.require(:course).permit(:name,:category)
+        params.require(:course).permit(:name,:category,:notes)
     end
 end

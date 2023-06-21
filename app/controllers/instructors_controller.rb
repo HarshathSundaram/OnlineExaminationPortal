@@ -1,20 +1,7 @@
 class InstructorsController < ApplicationController
-  def index
-    @instructors = Instructor.all
-  end
   def show
-    @instructor = Instructor.find(params[:id])
-  end
-  def new
-    @instructor = Instructor.new
-  end
-  def create
-    @instructor = Instructor.new(instructor_params)
-    if @instructor.save
-      redirect_to @instructor
-    else
-        render :new, status: :unprocessable_entity
-    end
+    @user = current_user
+    @instructor = Instructor.find(@user.userable_id)
   end
 
   def edit

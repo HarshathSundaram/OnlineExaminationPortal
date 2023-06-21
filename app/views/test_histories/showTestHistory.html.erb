@@ -1,0 +1,19 @@
+<div class="card m-2" style="width: 18rem;">
+  <div class="card-body">
+    <h5 class="card-title">Student: <%= @student.user.name%></h5>
+    <h6 class="card-subtitle mb-2 text-muted">Test: <%= @test.name%></h6>
+    <h6 class="card-subtitle mb-2 text-dark">Result: <%=@test_history.mark_scored%>/<%=@test_history.total_mark%></h6>
+  </div>
+</div>
+
+<% @test.questions.each do |key, value| %>
+  <div class="card m-2" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">Question: <%= value['question']%></h5>
+      <h6 class="card-subtitle mb-2 text-muted">Answer: <%= value['answer']%></h6>
+      <h6 class="card-subtitle mb-2 text-muted">Your Answer: <span class="<%= @test_history.answers[key] == value['answer'] ? 'text-success' : 'text-danger' %>"><%= @test_history.answers[key] %></span></h6>
+    </div>
+  </div>
+<% end %>
+
+<%= link_to "OK", student_path(@student), class: "btn btn-primary m-3" %>

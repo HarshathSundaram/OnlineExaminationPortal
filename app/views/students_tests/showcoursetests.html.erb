@@ -1,21 +1,26 @@
-<div class="card m-2" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">Course: <%= @course.name%></h5>
-    <h6 class="card-subtitle mb-2 text-muted">Instructor <%= @course.instructor.name%></h6>
-    <h6 class="card-subtitle mb-2 text-muted">Category: <%= @course.category%></h6>
-  </div>
+<div  class="row d-flex justify-content-center align-items-center">
+    <h1 class="display-4 text-center">Tests in the Course <%=@course.name%></h1>
+    <h4 class="text-center m-2"><i class="fas fa-user"></i> <%=@course.instructor.user.name%></h4>
+    <h4 class="text-center m-2"><i class="fas fa-book"></i> <%=@course.category%></h4>
+    <%if @course.tests.blank?%>
+    <p class="text-danger text-center">There is No tests in this Course <%=@course.name%>  &#128532;</p>
+    <%else%>
+        <%@course.tests.each do|test|%>
+            <div class="card m-3" style="width: 18rem;">
+                <div class="card-body">
+                    <h2 class="card-title"><%= test.name%></h2>
+                    <h5 class="card-subtitle mb-2 text-muted"><%= test.testable_type%></h5>
+                    <h5 class="card-subtitle mb-2 text-muted"><%=test.created_at.to_s.split(" ")[0]%></h5>
+                    <%= link_to "Take test", student_course_tests_take_path(@student,@course,test), class: "btn btn-primary" %>
+                </div>
+            </div>
+        <%end%>
+    <%end%>
 </div>
 
-<%if @course.tests.blank?%>
-    <p class="text-danger">No Tests available for this course</p>
-<%else%>
-    <%@course.tests.each do |test|%>
-        <div class="card m-2" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title"><%= test.name%></h5>
-                <%= link_to "Take test", student_course_tests_take_path(@student,@course,test), class: "btn btn-primary" %>
-            </div>
-        </div>
-    <%end%>
-<%end%>
 
+<style>
+  .card, .display-4{
+    font-family: 'Crimson Text', serif;
+  }
+</style>

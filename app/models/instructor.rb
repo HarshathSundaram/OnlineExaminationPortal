@@ -1,8 +1,5 @@
 class Instructor < ApplicationRecord
     has_many :courses, dependent: :destroy
-
-    validates :name , presence: :true
-    validates :email , presence: :true
-    validates :gender , presence: :true
+    has_one :user, as: :userable, dependent: :destroy
     validates :designation , presence: :true
 end
