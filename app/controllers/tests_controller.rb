@@ -1,10 +1,11 @@
 class TestsController < ApplicationController
+    before_action :authenticate_user!  
     #Course
     def newcoursequestions
-        @course = Course.find(params[:course_id])        
+        @course = Course.find_by(id:params[:course_id])        
     end
     def createcoursequestions
-        @course = Course.find(params[:course_id])
+        @course = Course.find_by(id:params[:course_id])
         name = params[:name]
         question = params[:question]
         options = params[:option]
@@ -27,12 +28,12 @@ class TestsController < ApplicationController
         redirect_to test_course_path(@course)
     end
     def showcoursequestions
-        @course = Course.find(params[:course_id])
-        @test = Test.find(params[:test_id])
+        @course = Course.find_by(id:params[:course_id])
+        @test = Test.find_by(id:params[:test_id])
     end
     def updatecoursequestions
-        @course = Course.find(params[:course_id])
-        @test = @course.tests.find(params[:test_id])
+        @course = Course.find_by(id:params[:course_id])
+        @test = @course.tests.find_by(id:params[:test_id])
         name = params[:name]
         question = params[:question]
         options = params[:option]
@@ -61,13 +62,13 @@ class TestsController < ApplicationController
     end
 
     def showcoursetests
-        @course = Course.find(params[:course_id])
+        @course = Course.find_by(id:params[:course_id])
         @tests = @course.tests.all
     end
    
     def destroycoursetests
-        @course = Course.find(params[:course_id])
-        @test = @course.tests.find(params[:test_id])
+        @course = Course.find_by(id:params[:course_id])
+        @test = @course.tests.find_by(id:params[:test_id])
         @test.destroy
         redirect_to test_course_path(@course)
     end
@@ -75,11 +76,12 @@ class TestsController < ApplicationController
 
     #Topic
     def newtopicquestions
-        @topic = Topic.find(params[:topic_id])
+        @course = Course.find_by(id: params[:course_id])
+        @topic = @course.topics.find_by(id: params[:topic_id])
     end
     def createtopicquestions
-        @topic = Topic.find(params[:topic_id])
-        @course = @topic.course
+        @course = Course.find_by(id: params[:course_id])
+        @topic = @course.topics.find_by(id: params[:topic_id])
         name = params[:name]
         question = params[:question]
         options = params[:option]
@@ -103,12 +105,14 @@ class TestsController < ApplicationController
     end
 
     def showtopicquestions
-        @topic = Topic.find(params[:topic_id])
-        @test = Test.find(params[:test_id])
+        @course = Course.find_by(id: params[:course_id])
+        @topic = @course.topics.find_by(id:params[:topic_id])
+        @test = Test.find_by(id:params[:test_id])
     end
     def updatetopicquestions
-        @topic = Topic.find(params[:topic_id])
-        @test = @topic.tests.find(params[:test_id])
+        @course = Course.find_by(id: params[:course_id])
+        @topic = @course.topics.find_by(id:params[:topic_id])
+        @test = @topic.tests.find_by(id:params[:test_id])
         name = params[:name]
         question = params[:question]
         options = params[:option]
@@ -147,18 +151,20 @@ class TestsController < ApplicationController
                   end
                 end
               end
-            redirect_to test_topic_path(@topic, @test)
+            redirect_to test_topic_path(@course,@topic, @test)
         end
     end
 
     def showtopictests
-        @topic = Topic.find(params[:topic_id])
+        @course = Course.find_by(id: params[:course_id])
+        @topic = @course.topics.find_by(id:params[:topic_id])
         @tests = @topic.tests.all
     end
     def destroytopictests
-        @topic = Topic.find(params[:topic_id])
-        @test = @topic.tests.find(params[:test_id])
+        @course = Course.find_by(id: params[:course_id])
+        @topic = @course.topics.find_by(id:params[:topic_id])
+        @test = @topic.tests.find_by(id:params[:test_id])
         @test.destroy
-        redirect_to test_topic_path(@topic)
+        redirect_to test_topic_path(@course,@topic)
     end
 end

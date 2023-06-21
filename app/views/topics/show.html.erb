@@ -19,8 +19,8 @@
             turbo_confirm: "Are You Sure?"
           }%> 
         <% end %>
-      <%= link_to "Create Test", test_topic_question_path(@topic), class: "btn btn-primary w-100 m-2 text-xl" %> 
-      <%= link_to "View Test", test_topic_path(@topic), class: "btn btn-info w-100 m-2 text-xl" %>
+      <%= link_to "Create Test", test_topic_question_path(@course,@topic), class: "btn btn-primary w-100 m-2 text-xl" %> 
+      <%= link_to "View Test", test_topic_path(@course,@topic), class: "btn btn-info w-100 m-2 text-xl" %>
     </div>
   </div>
 </div>

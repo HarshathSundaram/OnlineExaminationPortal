@@ -2,7 +2,7 @@
   <h3 class="card-title"><%= @test.name %></h3>
 </div>
 
-<%= form_with url: test_topic_edit_question_path(@topic, @test), method: :patch, local: true do |form| %>
+<%= form_with url: test_topic_edit_question_path(@course,@topic, @test), method: :patch, local: true do |form| %>
   <div>
     <div class="input-group m-3" style="width:30rem;">
       <div class="input-group-prepend">

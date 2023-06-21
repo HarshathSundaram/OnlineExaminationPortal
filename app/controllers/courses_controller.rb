@@ -3,17 +3,17 @@ class CoursesController < ApplicationController
     before_action :is_instructor?
 
     def show
-        @instructor = Instructor.find(params[:instructor_id])
-        @course = @instructor.courses.find(params[:id])
+        @instructor = Instructor.find_by(id:params[:instructor_id])
+        @course = @instructor.courses.find_by(id:params[:id])
     end
 
     def new
-        @instructor = Instructor.find(params[:instructor_id])
+        @instructor = Instructor.find_by(id:params[:instructor_id])
         @course = @instructor.courses.new
     end
 
     def create
-        @instructor = Instructor.find(params[:instructor_id])
+        @instructor = Instructor.find_by(id:params[:instructor_id])
         @course = @instructor.courses.build(course_params)
     
         if @course.save
@@ -24,13 +24,13 @@ class CoursesController < ApplicationController
     end
 
     def edit
-        @instructor = Instructor.find(params[:instructor_id])
-        @course = @instructor.courses.find(params[:id])
+        @instructor = Instructor.find_by(id:params[:instructor_id])
+        @course = @instructor.courses.find_by(id:params[:id])
     end
 
     def update
-        @instructor = Instructor.find(params[:instructor_id])
-        @course = @instructor.courses.find(params[:id])
+        @instructor = Instructor.find_by(id:params[:instructor_id])
+        @course = @instructor.courses.find_by(id:params[:id])
         if @course.update(course_params)
             redirect_to instructor_path(@instructor)
         else
@@ -39,20 +39,20 @@ class CoursesController < ApplicationController
     end
 
     def destroy
-        @instructor = Instructor.find(params[:instructor_id])
-        @course = @instructor.courses.find(params[:id])
+        @instructor = Instructor.find_by(id:params[:instructor_id])
+        @course = @instructor.courses.find_by(id:params[:id])
         @course.destroy
         redirect_to instructor_path(@instructor), status: :see_other
     end
 
     def newnotes
-        @instructor = Instructor.find(params[:instructor_id])
-        @course = @instructor.courses.find(params[:course_id])       
+        @instructor = Instructor.find_by(id:params[:instructor_id])
+        @course = @instructor.courses.find_by(id:params[:course_id])       
     end
 
     def createnotes
-        @instructor = Instructor.find(params[:instructor_id])
-        @course = @instructor.courses.find(params[:course_id]) 
+        @instructor = Instructor.find_by(id:params[:instructor_id])
+        @course = @instructor.courses.find_by(id:params[:course_id]) 
         notes = params[:notes]
         @course.notes.attach(notes)
         if @course.save
@@ -63,8 +63,8 @@ class CoursesController < ApplicationController
     end
 
     def deletenotes
-        @instructor = Instructor.find(params[:instructor_id])
-        @course = @instructor.courses.find(params[:course_id])
+        @instructor = Instructor.find_by(id:params[:instructor_id])
+        @course = @instructor.courses.find_by(id:params[:course_id])
         
         if @course.notes.attached?
           @course.notes.purge
@@ -87,7 +87,7 @@ class CoursesController < ApplicationController
         end
 
         course_id = params[:course_id] || params[:id] # Choose the appropriate parameter based on your route setup
-        course = Course.find(course_id)
+        course = Course.find_by(id:course_id)
         
         unless course && course.instructor == current_user.userable
             flash[:alert] = "You are not the instructor of this course"

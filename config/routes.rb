@@ -40,13 +40,13 @@ Rails.application.routes.draw do
   delete 'course/:course_id/test/:test_id', to: 'tests#destroycoursetests', as: 'test_course_delete'
 
 
-  get 'topic/:topic_id/question', to: 'tests#newtopicquestions', as: 'test_topic_question'
-  post 'topic/:topic_id/question', to: 'tests#createtopicquestions', as: 'test_topic_create'
-  get 'topic/:topic_id/test/:test_id/question', to: 'tests#showtopicquestions', as: 'test_topic_edit'
-  patch 'topic/:topic_id/test/:test_id/question', to: 'tests#updatetopicquestions', as: 'test_topic_edit_question'
-  get 'topic/:topic_id/tests', to: 'tests#showtopictests', as: 'test_topic'
-  get 'topic/:topic_id/tests/:test_id', to: 'tests#showtopicquestions', as: 'test_topic_show'
-  delete 'topic/:topic_id/tests/:test_id', to: 'tests#destroytopictests', as: 'test_topic_delete'
+  get 'course/:course_id/topic/:topic_id/question', to: 'tests#newtopicquestions', as: 'test_topic_question'
+  post 'course/:course_id/topic/:topic_id/question', to: 'tests#createtopicquestions', as: 'test_topic_create'
+  get 'course/:course_id/topic/:topic_id/test/:test_id/question', to: 'tests#showtopicquestions', as: 'test_topic_edit'
+  patch 'course/:course_id/topic/:topic_id/test/:test_id/question', to: 'tests#updatetopicquestions', as: 'test_topic_edit_question'
+  get 'course/:course_id/topic/:topic_id/tests', to: 'tests#showtopictests', as: 'test_topic'
+  get 'course/:course_id/topic/:topic_id/tests/:test_id', to: 'tests#showtopicquestions', as: 'test_topic_show'
+  delete 'course/:course_id/topic/:topic_id/tests/:test_id', to: 'tests#destroytopictests', as: 'test_topic_delete'
 
 
   #Students Course and Topic Testes

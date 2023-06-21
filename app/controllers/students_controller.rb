@@ -3,15 +3,15 @@ class StudentsController < ApplicationController
   before_action :is_student?
   def show
     @user = current_user
-    @student = Student.find(@user.userable_id)
+    @student = Student.find_by(id:@user.userable_id)
   end
 
   def edit
-    @student = Student.find(params[:id])
+    @student = Student.find_by(id:params[:id])
   end
 
   def update
-    @student = Student.find(params[:id])
+    @student = Student.find_by(id:params[:id])
     if @student.update(student_params)
         redirect_to @student
     else  
@@ -20,7 +20,7 @@ class StudentsController < ApplicationController
   end
 
   def destroy
-    @student = Student.find(params[:id])
+    @student = Student.find_by(id:params[:id])
     @student.destroy
     redirect_to student_index_path, status: :see_other
   end
@@ -36,7 +36,7 @@ class StudentsController < ApplicationController
           flash[:alert] = "Unauthorized action"
           redirect_to instructor_path(current_user.userable_id)
       end
-      student = Student.find(params[:id])
+      student = Student.find_by(id:params[:id])
       unless current_user.userable == student
         flash[:alert] = "You are not allowed to access another student"
         redirect_to student_path(current_user.userable)

@@ -1,7 +1,8 @@
 class StudentsTestsController < ApplicationController
+    before_action :authenticate_user!  
     def showcoursetests
         @student = Student.find(params[:student_id])
-        @course = @student.courses.find(params[:course_id])
+        @course = @student.courses.find_by(id:params[:course_id])
         @test = @course.tests.all
     end
 
