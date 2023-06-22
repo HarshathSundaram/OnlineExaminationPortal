@@ -1,4 +1,5 @@
 class LandingController < ApplicationController
+  before_action :authenticate_user!
   def index
     if current_user.userable_type == "Student"
       redirect_to student_path(current_user.userable_id)

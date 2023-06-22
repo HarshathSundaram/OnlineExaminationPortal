@@ -7,10 +7,11 @@ class TestsController < ApplicationController
     def createcoursequestions
         @course = Course.find_by(id:params[:course_id])
         name = params[:name]
-        question = params[:question]
-        options = params[:option]
-        answer = params[:answer]
-        mark = params[:mark]
+        name = params[:name]
+        question = params[:test][:question]
+        options = params[:test][:option]
+        answer = params[:test][:answer]
+        mark = params[:test][:mark]
         a = question.keys
         test = Hash.new
         a.each do |key|

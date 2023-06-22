@@ -8,6 +8,9 @@ class Course < ApplicationRecord
   validates :name, presence: :true
   validates :category, presence: :true
 
+  scope :course_with_greater_than_5_topic, -> { joins(:topics).group('courses.id').having('COUNT(topics.id) >= 5') }
+  scope :course_with_less_than_5_topic, -> { joins(:topics).group('courses.id').having('COUNT(topics.id) < 5') }
+
   def validate_notes_presence
     errors.add(:notes, "must be attached") unless notes.attached?
   end
