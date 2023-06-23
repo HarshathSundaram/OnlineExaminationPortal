@@ -5,7 +5,7 @@ class Api::StudentsController < Api::ApiController
     # @user = current_user
     # @student = Student.find_by(id:@user.userable_id)
     student = Student.find_by(id:params[:id])
-    name = @student.user.name
+    name = student.user.name
     if student
       render json:{"name": name,"Student": student}, status: :ok
   else

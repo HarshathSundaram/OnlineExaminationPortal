@@ -58,7 +58,22 @@ class TestsController < ApplicationController
         puts(ques)
         @new_t = Test.new(name: name, questions: ques)
         if @test.update({name:name,questions:ques})
-            redirect_to test_course_path(@course,@test)
+            if !@test.test_histories.blank?
+                @test_histories = @test.test_histories.all
+                @test_histories.each do |history|
+                  total_mark = 0
+                  mark_scored = 0
+                  answer_stu = history.answers
+                  ques.each do |key, value|
+                    total_mark = total_mark + (value['mark'].to_i)
+                    if value['answer'] == answer_stu[key]
+                      mark_scored = mark_scored + (value['mark'].to_i)
+                    end
+                    history.update({ mark_scored: mark_scored, total_mark: total_mark })
+                  end
+                end
+              end
+            redirect_to test_course_path(@course, @test)
         end
     end
 

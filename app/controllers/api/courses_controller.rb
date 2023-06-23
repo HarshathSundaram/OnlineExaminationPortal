@@ -4,7 +4,7 @@ class Api::CoursesController < Api::ApiController
 
     def show
         instructor = Instructor.find_by(id:params[:instructor_id])
-        course = @instructor.courses.find_by(id:params[:id])
+        course = instructor.courses.find_by(id:params[:id])
         if course
             render json:course, status: :ok            
         else
@@ -14,13 +14,13 @@ class Api::CoursesController < Api::ApiController
 
     def new
         instructor = Instructor.find_by(id:params[:instructor_id])
-        course = @instructor.courses.new
+        course = instructor.courses.new
         render json:{message: "New Course Creation"}
     end
 
     def create
         instructor = Instructor.find_by(id:params[:instructor_id])
-        course = @instructor.courses.build(course_params)
+        course = instructor.courses.build(course_params)
     
         if course.save
             render json:{message: "Course created successfully"}, status: :created
@@ -32,13 +32,13 @@ class Api::CoursesController < Api::ApiController
 
     def edit
         instructor = Instructor.find_by(id:params[:instructor_id])
-        course = @instructor.courses.find_by(id:params[:id])
+        course = instructor.courses.find_by(id:params[:id])
         render json:{message: "Course Editing"}
     end
 
     def update
         instructor = Instructor.find_by(id:params[:instructor_id])
-        course = @instructor.courses.find_by(id:params[:id])
+        course = instructor.courses.find_by(id:params[:id])
         if course.update(course_params)
             rende json: course, status: :accepted
         else
@@ -48,7 +48,7 @@ class Api::CoursesController < Api::ApiController
 
     def destroy
         instructor = Instructor.find_by(id:params[:instructor_id])
-        course = @instructor.courses.find_by(id:params[:id])
+        course = instructor.courses.find_by(id:params[:id])
         if course.destroy
             render json:{message:"Course deleted successfully"}, status: :see_other
         else
@@ -57,12 +57,12 @@ class Api::CoursesController < Api::ApiController
 
     def newnotes
         instructor = Instructor.find_by(id:params[:instructor_id])
-        course = @instructor.courses.find_by(id:params[:course_id])       
+        course = instructor.courses.find_by(id:params[:course_id])       
     end
 
     def createnotes
         instructor = Instructor.find_by(id:params[:instructor_id])
-        course = @instructor.courses.find_by(id:params[:course_id]) 
+        course = instructor.courses.find_by(id:params[:course_id]) 
         notes = params[:notes]
         course.notes.attach(notes)
         if course.save
@@ -74,7 +74,7 @@ class Api::CoursesController < Api::ApiController
 
     def deletenotes
         instructor = Instructor.find_by(id:params[:instructor_id])
-        course = @instructor.courses.find_by(id:params[:course_id])
+        course = instructor.courses.find_by(id:params[:course_id])
         
         if course.notes.attached?
           if course.notes.purge
@@ -83,7 +83,7 @@ class Api::CoursesController < Api::ApiController
             render json:{message:"Notes not deleted"}, status: :not_modified
           end  
         else
-          render json:{message:"No notes available"}, status: :not_found
+          render json:{message:"No notes available"}, status: :no_content
         end
     end
 

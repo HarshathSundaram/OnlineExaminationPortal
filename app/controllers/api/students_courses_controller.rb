@@ -13,13 +13,16 @@ class StudentsCoursesController < ApplicationController
 
     def showcourse
         student = Student.find_by(id:params[:student_id])
-        course = Course.find_by(id:params[:course_id])
+        course = student.courses.find_by(id:params[:course_id])
         # unless current_user.userable == @student && @student.courses.include?(@course)
         #     flash[:alert] = "Unauthorized action"
         #     redirect_to student_path(current_user.userable)
         # end 
-        unless student and course
-            render json:{message:"Error in fetching student and course details"}, status: :not_found
+        unless student
+            render json:{message:"Error in fetching student details"}, status: :not_found
+        end
+        unless course
+            render json:{message:"No courses for the student #{student.user.name}"}, status: :no_content
         else
             render json:{"course":course,"student":student},status: :ok
         end
@@ -27,14 +30,20 @@ class StudentsCoursesController < ApplicationController
 
     def showtopic
         student = Student.find_by(id:params[:student_id])
-        course = Course.find_by(id:params[:course_id])
-        topic = Topic.find_by(id:params[:topic_id])
+        course = student.courses.find_by(id:params[:course_id])
+        topic = course.topics.find_by(id:params[:topic_id])
         # unless current_user.userable == @student && @student.courses.include?(@course)
         #     flash[:alert] = "Unauthorized action"
         #     redirect_to student_path(current_user.userable)
         # end 
-        unless student and course and topic
-            render json:{message:"Error in fetching student, course, and topic details"}, status: :not_found
+        unless student
+            render json:{message:"Error in fetching student details"}, status: :not_found
+        end
+        unless course
+            render json:{message:"No courses for the student #{student.user.name}"}, status: :no_content
+        else
+        unless topic
+            render json:{message:"No topics available for the course #{course.name}"}, status: :no_content
         else
             render json:{"course":course,"student":student,"topic":topic},status: :ok
         end
@@ -43,7 +52,7 @@ class StudentsCoursesController < ApplicationController
     def enroll
         student = Student.find_by(id:params[:student_id])
         course = Course.find_by(id:params[:course_id])
-        if student.courses << @course
+        if student.courses << course
             render json:{message:"#{student.user.name} successfully enrolled to a course"},status: :created
         else
             render json:{message:"Error in enrolling to a course "},status: :not_modified     
@@ -51,12 +60,12 @@ class StudentsCoursesController < ApplicationController
 
     def unenroll
         student = Student.find_by(id:params[:student_id])
-        course = Course.find_by(id:params[:course_id])
+        course =student.courses.find_by(id:params[:course_id])
         # unless current_user.userable == @student && @student.courses.include?(@course)
         #     flash[:alert] = "Unauthorized action"
         #     redirect_to student_path(current_user.userable)
         # end 
-        if student.courses.delete(@course)
+        if student.courses.delete(course)
             render json:{message:"#{student.user.name} successfully unenrolled to a course"},status: :accepted
         else
             render json:{message:"Error in unenroll a course"},status: :not_modified

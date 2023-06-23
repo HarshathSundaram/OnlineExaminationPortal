@@ -2,10 +2,16 @@ class Api::StudentsTestsController < Api::ApiController
     # before_action :authenticate_user!  
     def showcoursetests
         student = Student.find(params[:student_id])
-        course = @student.courses.find_by(id:params[:course_id])
-        tests = @course.tests.all
-        unless student and course and tests
-            render json:{message:"Error in getting student, course, and tests details"},status: :not_found
+        course = student.courses.find_by(id:params[:course_id])
+        tests = course.tests.all
+        unless student
+            render json:{message:"Error in getting student"},status: :not_found
+        end
+        unless course
+            render json:{message:"No courses for the student #{student.user.name}"}, status: :no_content
+        end
+        unless tests
+            render json:{message:"No tests available for the course #{course.name}"}, status: :no_content
         else
             render json:{"Student": student,"Course": course,"tests": tests},status: :ok
         end
@@ -13,8 +19,8 @@ class Api::StudentsTestsController < Api::ApiController
 
     def takecoursetests
         student = Student.find(params[:student_id])
-        course = @student.courses.find(params[:course_id])
-        test = @course.tests.find(params[:test_id])
+        course = student.courses.find(params[:course_id])
+        test = course.tests.find(params[:test_id])
         unless student and course and test
             render json:{message:"Error in getting student, course, and test details"},status: :not_found
         else
@@ -24,8 +30,8 @@ class Api::StudentsTestsController < Api::ApiController
 
     def validatecoursetest
         student = Student.find(params[:student_id])
-        course = @student.courses.find(params[:course_id])
-        test = @course.tests.find(params[:test_id])  
+        course = student.courses.find(params[:course_id])
+        test = course.tests.find(params[:test_id])  
         answer_stu = params[:answer_stu]
         answer = params[:answer]
         mark = params[:mark]
@@ -39,7 +45,7 @@ class Api::StudentsTestsController < Api::ApiController
             end
             total_mark = total_mark+ (value['mark'].to_i)
         end
-        test_history = TestHistory.new(mark_scored: mark_scored, total_mark: total_mark, answers: answer_stu, student: @student, test: @test)
+        test_history = TestHistory.new(mark_scored: mark_scored, total_mark: total_mark, answers: answer_stu, student: student, test: test)
         if student.test_histories << test_history
             render json:test_history,status: :created
         else
@@ -49,9 +55,9 @@ class Api::StudentsTestsController < Api::ApiController
 
     def coursetestresult
         student = Student.find(params[:student_id])
-        course = @student.courses.find(params[:course_id])
-        test = @course.tests.find(params[:test_id])
-        result = @student.test_histories.where(test_id: params[:test_id]).last
+        course = student.courses.find(params[:course_id])
+        test = course.tests.find(params[:test_id])
+        result = student.test_histories.where(test_id: params[:test_id]).last
         unless student and course and test and result
             render json:{message:"Error in fetching in result of the student"},status: :not_found
         else
@@ -61,21 +67,30 @@ class Api::StudentsTestsController < Api::ApiController
 
     def showtopictests
         student = Student.find(params[:student_id])
-        course = @student.courses.find(params[:course_id])
-        topic = @course.topics.find(params[:topic_id])
-        tests = @topic.tests.all
-        unless student and course and topic and tests
-            render json:{message:"Error in getting student, course, topic, and tests details"},status: :not_found
+        course = student.courses.find(params[:course_id])
+        topic = course.topics.find(params[:topic_id])
+        tests = topic.tests.all
+        unless student
+            render json:{message:"Error in getting student"},status: :not_found
+        end
+        unless course
+            render json:{message:"No courses for the student #{student.user.name}"}, status: :no_content
+        end
+        unless topic
+            render json:{message:"No topic for the course #{course.name}"}, status: :no_content
+        end
+        unless tests
+            render json:{message:"No tests available for the topic #{topic.name}"}, status: :no_content
         else
-            render json:{"Student": student,"Course": course,"topic": topic,"tests": tests},status: :ok
+            render json:{"Student": student,"Course": course,"tests": tests},status: :ok
         end
     end
 
     def taketopictests
         student = Student.find(params[:student_id])
-        course = @student.courses.find(params[:course_id])
-        topic = @course.topics.find(params[:topic_id])
-        test = @topic.tests.find(params[:test_id])
+        course = student.courses.find(params[:course_id])
+        topic = course.topics.find(params[:topic_id])
+        test = topic.tests.find(params[:test_id])
         unless student and course and topic and test
             render json:{message:"Error in getting student, course, topic, and test details"},status: :not_found
         else
@@ -85,9 +100,9 @@ class Api::StudentsTestsController < Api::ApiController
 
     def validatetopictest
         student = Student.find(params[:student_id])
-        course = @student.courses.find(params[:course_id])
-        topic = @course.topics.find(params[:topic_id])
-        test = @topic.tests.find(params[:test_id])
+        course = student.courses.find(params[:course_id])
+        topic = course.topics.find(params[:topic_id])
+        test = topic.tests.find(params[:test_id])
         answer_stu = params[:answer_stu]
         answer = params[:answer]
         mark = params[:mark]
@@ -101,7 +116,7 @@ class Api::StudentsTestsController < Api::ApiController
             end
             total_mark = total_mark+ (value['mark'].to_i)
         end
-        test_history = TestHistory.new(mark_scored: mark_scored, total_mark: total_mark, answers: answer_stu, student: @student, test: @test)
+        test_history = TestHistory.new(mark_scored: mark_scored, total_mark: total_mark, answers: answer_stu, student: student, test: test)
         if student.test_histories << test_history
             render json:test_history,status: :created
         else
@@ -111,10 +126,10 @@ class Api::StudentsTestsController < Api::ApiController
 
     def topictestresult
         student = Student.find(params[:student_id])
-        course = @student.courses.find(params[:course_id])
-        topic = @course.topics.find(params[:topic_id])
-        test = @topic.tests.find(params[:test_id])
-        result = @student.test_histories.where(test_id: params[:test_id]).last
+        course = student.courses.find(params[:course_id])
+        topic = course.topics.find(params[:topic_id])
+        test = topic.tests.find(params[:test_id])
+        result = student.test_histories.where(test_id: params[:test_id]).last
         unless student and course and test and result
             render json:{message:"Error in fetching in result of the student"},status: :not_found
         else
