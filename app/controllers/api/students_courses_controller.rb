@@ -1,4 +1,4 @@
-class Api::StudentsCoursesController < Api::ApiController
+class StudentsCoursesController < ApplicationController
     # before_action :authenticate_user! 
     # before_action :is_student? 
     def index
@@ -13,7 +13,11 @@ class Api::StudentsCoursesController < Api::ApiController
 
     def showcourse
         student = Student.find_by(id:params[:student_id])
-        course = student.courses.find_by(id:params[:course_id])
+        course = Course.find_by(id:params[:course_id])
+        # unless current_user.userable == @student && @student.courses.include?(@course)
+        #     flash[:alert] = "Unauthorized action"
+        #     redirect_to student_path(current_user.userable)
+        # end 
         unless student and course
             render json:{message:"Error in fetching student and course details"}, status: :not_found
         else
@@ -23,8 +27,12 @@ class Api::StudentsCoursesController < Api::ApiController
 
     def showtopic
         student = Student.find_by(id:params[:student_id])
-        course = student.courses.find_by(id:params[:course_id])
-        topic = course.topics.find_by(id:params[:topic_id])
+        course = Course.find_by(id:params[:course_id])
+        topic = Topic.find_by(id:params[:topic_id])
+        # unless current_user.userable == @student && @student.courses.include?(@course)
+        #     flash[:alert] = "Unauthorized action"
+        #     redirect_to student_path(current_user.userable)
+        # end 
         unless student and course and topic
             render json:{message:"Error in fetching student, course, and topic details"}, status: :not_found
         else
@@ -38,12 +46,16 @@ class Api::StudentsCoursesController < Api::ApiController
         if student.courses << @course
             render json:{message:"#{student.user.name} successfully enrolled to a course"},status: :created
         else
-            render json:{message:"Error in enrolling to a course "},status: :not_modified
+            render json:{message:"Error in enrolling to a course "},status: :not_modified     
     end
 
     def unenroll
         student = Student.find_by(id:params[:student_id])
         course = Course.find_by(id:params[:course_id])
+        # unless current_user.userable == @student && @student.courses.include?(@course)
+        #     flash[:alert] = "Unauthorized action"
+        #     redirect_to student_path(current_user.userable)
+        # end 
         if student.courses.delete(@course)
             render json:{message:"#{student.user.name} successfully unenrolled to a course"},status: :accepted
         else
@@ -56,13 +68,7 @@ class Api::StudentsCoursesController < Api::ApiController
         unless user_signed_in? && current_user.userable_type == "Student"
             flash[:alert] = "Unauthorized action"
             redirect_to instructor_path(current_user.userable_id)
-        end
-        student = Student.find_by(id:params[:student_id])
-        course = Course.find_by(id:params[:course_id])
-        unless current_user.userable == student && student.courses.include?(course)
-            flash[:alert] = "Unauthorized action"
-            redirect_to student_path(current_user.userable)
-        end  
+        end 
     end
     
 end
