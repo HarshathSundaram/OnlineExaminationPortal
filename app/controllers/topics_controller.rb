@@ -15,7 +15,7 @@ class TopicsController < ApplicationController
         @course = Course.find_by(id:params[:course_id])
         @topic = @course.topics.new(topic_params)
         if @topic.save
-            redirect_to instructor_course_path(@course.instructor,@course)
+            redirect_to instructor_course_path(@course.instructor,@course), notice: "Topics created successfully"
         else
             render :new, status: :unprocessable_entity
         end
@@ -30,7 +30,7 @@ class TopicsController < ApplicationController
         @course = Course.find_by(id:params[:course_id])
         @topic = @course.topics.find_by(id:params[:id])
         if @topic.update(topic_params)
-            redirect_to course_path(@course)
+            redirect_to course_path(@course), notice: "Topic is updated!!!"
         else
             render :edit, status: :unprocessable_entity
         end
@@ -40,7 +40,7 @@ class TopicsController < ApplicationController
         @course = Course.find_by(id:params[:course_id])
         @topic = @course.topics.find_by(id:params[:id])
         @topic.destroy
-        redirect_to course_path(@course), status: :see_other
+        redirect_to course_path(@course), status: :see_other, alert: "Topic is deleted!!!"
     end
 
 

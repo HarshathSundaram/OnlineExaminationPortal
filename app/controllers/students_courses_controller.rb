@@ -29,7 +29,7 @@ class StudentsCoursesController < ApplicationController
         @student = Student.find_by(id:params[:student_id])
         @course = Course.find_by(id:params[:course_id])
         @student.courses << @course
-        redirect_to student_path(@student),  alert: "Successfully enrolled"     
+        redirect_to student_path(@student),  notice: "Successfully enrolled"     
     end
 
     def unenroll

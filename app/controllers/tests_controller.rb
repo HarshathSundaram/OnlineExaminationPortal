@@ -26,7 +26,7 @@ class TestsController < ApplicationController
         end
         @t = Test.new(name: name, questions: test)
         @course.tests << @t
-        redirect_to test_course_path(@course)
+        redirect_to test_course_path(@course), notice: "Test created successfully"
     end
     def showcoursequestions
         @course = Course.find_by(id:params[:course_id])
@@ -73,7 +73,7 @@ class TestsController < ApplicationController
                   end
                 end
               end
-            redirect_to test_course_path(@course, @test)
+            redirect_to test_course_path(@course, @test), notice: "Test is updated!!!"
         end
     end
 
@@ -86,7 +86,7 @@ class TestsController < ApplicationController
         @course = Course.find_by(id:params[:course_id])
         @test = @course.tests.find_by(id:params[:test_id])
         @test.destroy
-        redirect_to test_course_path(@course)
+        redirect_to test_course_path(@course), alert: "Test is deleted!!!"
     end
 
 
@@ -117,7 +117,7 @@ class TestsController < ApplicationController
         end
         @t = Test.new(name: name, questions: test)
         @topic.tests << @t
-        redirect_to course_topic_path(@course,@topic)
+        redirect_to course_topic_path(@course,@topic), notice: "Test created successfully"
     end
 
     def showtopicquestions
@@ -167,7 +167,7 @@ class TestsController < ApplicationController
                   end
                 end
               end
-            redirect_to test_topic_path(@course,@topic, @test)
+            redirect_to test_topic_path(@course,@topic, @test), notice:"Test is updated!!!"
         end
     end
 
@@ -181,6 +181,6 @@ class TestsController < ApplicationController
         @topic = @course.topics.find_by(id:params[:topic_id])
         @test = @topic.tests.find_by(id:params[:test_id])
         @test.destroy
-        redirect_to test_topic_path(@course,@topic)
+        redirect_to test_topic_path(@course,@topic), alert: "Test is deleted!!!"
     end
 end

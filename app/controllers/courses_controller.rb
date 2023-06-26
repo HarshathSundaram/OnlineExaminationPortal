@@ -32,7 +32,7 @@ class CoursesController < ApplicationController
         @instructor = Instructor.find_by(id:params[:instructor_id])
         @course = @instructor.courses.find_by(id:params[:id])
         if @course.update(course_params)
-            redirect_to instructor_path(@instructor)
+            redirect_to instructor_path(@instructor), notice: "Course is updated!!!"
         else
             render :edit, status: :unprocessable_entity
         end
@@ -42,7 +42,7 @@ class CoursesController < ApplicationController
         @instructor = Instructor.find_by(id:params[:instructor_id])
         @course = @instructor.courses.find_by(id:params[:id])
         @course.destroy
-        redirect_to instructor_path(@instructor), status: :see_other
+        redirect_to instructor_path(@instructor), status: :see_other, alert: "Course is deleted!!!"
     end
 
     def newnotes
@@ -68,7 +68,7 @@ class CoursesController < ApplicationController
         
         if @course.notes.attached?
           @course.notes.purge
-          redirect_to instructor_course_path(@instructor,@course), notice: "Notes deleted successfully."
+          redirect_to instructor_course_path(@instructor,@course),alert: "Notes deleted!!"
         else
           redirect_to instructor_course_path(@instructor,@course), alert: "No notes available to delete."
         end
