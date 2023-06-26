@@ -6,30 +6,6 @@ class StudentsController < ApplicationController
     @student = Student.find_by(id:@user.userable_id)
   end
 
-  def edit
-    @student = Student.find_by(id:params[:id])
-  end
-
-  def update
-    @student = Student.find_by(id:params[:id])
-    if @student.update(student_params)
-        redirect_to @student
-    else  
-        render :edit, status: :unprocessable_entity
-    end
-  end
-
-  def destroy
-    @student = Student.find_by(id:params[:id])
-    @student.destroy
-    redirect_to student_index_path, status: :see_other
-  end
-
-  private
-  def student_params
-    params.require(:student).permit(:name,:email,:gender,:department,:year)
-  end
-
   private
   def is_student?
       unless user_signed_in? && current_user.userable_type == "Student"

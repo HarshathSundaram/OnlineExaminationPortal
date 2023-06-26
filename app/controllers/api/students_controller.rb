@@ -5,50 +5,57 @@ class Api::StudentsController < Api::ApiController
     # @user = current_user
     # @student = Student.find_by(id:@user.userable_id)
     student = Student.find_by(id:params[:id])
-    name = student.user.name
     if student
+      name = student.user.name
       render json:{"name": name,"Student": student}, status: :ok
-  else
-      render json:{message: "Student not found"}, status: :not_found
-  end
-  end
-
-  def edit
-    student = Student.find_by(id:params[:id])
-  end
-
-  def update
-    student = Student.find_by(id:params[:id])
-    if student.update(student_params)
-      render json:student, status: :accepted
     else
-      render json:{message:"Error in updating Student"}, status: :not_modified
+        render json:{message: "Student not found"}, status: :internal_server_error
+    end
+    
+  end
+
+  def studentsOfDepartment
+    student_name=[]
+    students = Student.all
+    department = params[:department]
+    students.each do |student|
+      if student.department == department
+        student_name<<student.user.name
+      end      
+    end
+    if student_name.blank?
+      render json:{message:"There is no student in #{department} department"},status: :internal_server_error
+    else
+      render json:student_name,status: :ok
     end
   end
 
-  def destroy
-    student = Student.find_by(id:params[:id])
-    if student.destroy
-      render json:{message:"Student deleted successfully"}, status: :see_other
+  def studentEnrolledCourses
+    student_name  = []
+    students = Student.all
+    count = params[:count].to_i  
+    students.each do |student|
+      if student.courses.count == count
+        student_name << student.user.name
+      end
+    end
+    if student_name.blank?
+      render json:{message:"There is no student in enrolled in #{count} courses"},status: :internal_server_error
     else
-      render json:{message: "Error in deleting student"}, status: :not_modified
-  end
-
-  private
-  def student_params
-    params.require(:student).permit(:name,:email,:gender,:department,:year)
+      render json:student_name,status: :ok
+    end
   end
 
   private
   def is_student?
-      unless user_signed_in? && current_user.userable_type == "Student"
-          flash[:alert] = "Unauthorized action"
-          redirect_to instructor_path(current_user.userable_id)
-      end
-      student = Student.find_by(id:params[:id])
-      unless current_user.userable == student
-        flash[:alert] = "You are not allowed to access another student"
-        redirect_to student_path(current_user.userable)
-      end  
+    unless user_signed_in? && current_user.userable_type == "Student"
+        flash[:alert] = "Unauthorized action"
+        redirect_to instructor_path(current_user.userable_id)
+    end
+    student = Student.find_by(id:params[:id])
+    unless current_user.userable == student
+      flash[:alert] = "You are not allowed to access another student"
+      redirect_to student_path(current_user.userable)
+    end  
   end
 end

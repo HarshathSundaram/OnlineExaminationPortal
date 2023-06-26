@@ -32,7 +32,10 @@ ActiveAdmin.register User do
     column "User Type" do |model|
       model.userable_type
     end
-    column :reset_password_token
-    column :reset_password_sent_at
-  end 
+  end
+  filter :email
+  filter :gender,as: :select
+  
+  scope :student
+  scope :instructor
 end

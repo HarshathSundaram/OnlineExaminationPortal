@@ -15,7 +15,14 @@ ActiveAdmin.register TestHistory do
     permitted
   end
   
-  
+  actions :index, :show # Specify the actions you want to include
+  # Override the "new" action to prevent creating new records
+  controller do
+    def new
+      redirect_to admin_test_histories_path, alert: "New Test History creation is not allowed."
+    end
+  end 
+
   index do
     selectable_column
     id_column

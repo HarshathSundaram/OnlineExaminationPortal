@@ -1,4 +1,4 @@
-class Api::LandingController < Api::ApController
+class Api::LandingController < Api::ApiController
   # before_action :authenticate_user!
   def index
     # if current_user.userable_type == "Student"

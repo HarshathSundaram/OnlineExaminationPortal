@@ -6,40 +6,45 @@ class Api::InstructorsController < Api::ApiController
     # @instructor = Instructor.find_by(id:@user.userable_id)
 
     instructor = Instructor.find_by(id: params[:id])
-    name = instructor.user.name
     if instructor
+        name = instructor.user.name
         render json:{"name": name,"Instructor": instructor}, status: :ok
     else
         render json:{message: "Instructor not found"}, status: :not_found
     end
   end
 
-  def edit
-    instructor = Instructor.find_by(id:params[:id])
-  end
-
-  def update
-    instructor = Instructor.find_by(id:params[:id])
-    if instructor.update(instructor_params)
-        render json:instructor, status: :accepted
+  def instructorsWithDesignation
+    instructor_name=[]
+    instructors = Instructor.all
+    designation = params[:designation].downcase
+    instructors.each do |instructor|
+      if instructor.designation.downcase == designation
+            instructor_name<<instructor.user.name
+      end
+    end
+    if instructor_name.blank?
+      render json:{message:"No instructor with designation #{designation}"},status: :internal_server_error
     else
-        render json:{message:"Error in updating Instructor"}, status: :not_modified
+      render json:instructor_name,status: :ok
     end
   end
 
-  def destroy
-    instructor = Instructor.find_by(id:params[:id])
-    if instructor.destroy
-      render json:{message:"Instructor deleted successfully"}, status: :see_other
+  def moreThanCourses
+    instructor_name=[]
+    instructors = Instructor.all
+    count = params[:count].to_i
+    instructors.each do |instructor|
+      if instructor.courses.count == count
+            instructor_name<<instructor.user.name
+      end
+    end
+    if instructor_name.blank?
+      render json:{message:"No instructor with #{count} courses"},status: :internal_server_error
     else
-      render json:{message: "Error in deleting instructor"}, status: :not_modified
+      render json:instructor_name,status: :ok
+    end
   end
-
-  private
-  def instructor_params
-    params.require(:instructor).permit(:name,:email,:gender,:designation)
-  end
-
   private
   def is_instructor?
       unless user_signed_in? && current_user.userable_type == "Instructor"

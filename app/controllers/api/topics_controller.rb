@@ -3,14 +3,15 @@ class Api::TopicsController < Api::ApiController
     # before_action :is_instructor?
     def show
         course = Course.find_by(id:params[:course_id])
-        topic = course.topics.find_by(id:params[:id])
-        unless course
-            render json:{message:"Error in fetching course"}, status: :not_found
-        end
-        if topic
-            render json:topic, status: :ok
+        if course
+            topic = course.topics.find_by(id:params[:id])   
+            if topic
+                render json:topic, status: :ok
+            else
+                render json:{message:"No topic available for the course"},status: :no_content
+            end
         else
-            render json:{message:"No topic available for the course #{course.name}"},status: :no_content
+            render json:{message:"Error in fetching course"}, status: :not_found
         end
     end
 
@@ -21,6 +22,9 @@ class Api::TopicsController < Api::ApiController
 
     def create
         course = Course.find_by(id:params[:course_id])
+        unless course
+            render json:{message:"Error in fetching course"}, status: :not_found
+        end
         topic = course.topics.new(topic_params)
         if topic.save
             render json:topic,status: :ok
@@ -36,6 +40,9 @@ class Api::TopicsController < Api::ApiController
 
     def update
         course = Course.find_by(id:params[:course_id])
+        unless course
+            render json:{message:"Error in fetching course"}, status: :not_found
+        end
         topic = course.topics.find_by(id:params[:id])
         if topic.update(topic_params)
             render json:topic, status: :accepted
@@ -46,12 +53,18 @@ class Api::TopicsController < Api::ApiController
 
     def destroy
         course = Course.find_by(id:params[:course_id])
-        topic = course.topics.find_by(id:params[:id])
-        if topic.destroy
-            render json:{message:"Topic with id: #{params[:id].to_i} is destroyes successfully"}, status: :see_other
+        if course
+            topic = course.topics.find_by(id:params[:id])
+            if topic.destroy
+                render json:{message:"Topic with id: #{params[:id].to_i} is destroyes successfully"}, status: :see_other
+            else
+                render json:{message:"Error while destroying topic with id: #{params[:id].to_i}"}, status: :not_modified
+            end
         else
-            render json:{message:"Error while destroying topic with id: #{params[:id].to_i}"}, status: :not_modified
+            render json:{message:"Error in fetching course"}, status: :not_found
         end
+        
+        
     end
 
 
@@ -62,25 +75,41 @@ class Api::TopicsController < Api::ApiController
 
     def createnotes
         course = Course.find_by(id:params[:course_id])
-        topic = course.topics.find_by(id:params[:topic_id])
-        notes = params[:notes]
-        topic.notes.attach(notes)
-        if topic.save
-            redirect_to course_topic_path(course,topic),notice: "Notes Added successfully"
+        unless course
+            render json:{message:"Error in fetching course"}, status: :not_found
         else
-            render :newnotes,status: :unprocessable_entity
-        end        
+            topic = course.topics.find_by(id:params[:topic_id])
+            if topic
+                notes = params[:notes]
+                topic.notes.attach(notes)
+                if topic.save
+                    render json:{message:"Notes Created Successfully"},status: :ok
+                else
+                    render json:{message:"Could Not Save Notes"},status: :unprocessable_entity
+                end 
+            else
+                render json:{message:"Topic not found"}, status: :internal_sever_error
+            end     
+        end
+          
     end
 
     def deletenotes
         course = Course.find_by(id:params[:course_id])
-        topic = course.topics.find_by(id:params[:topic_id])
-        
-        if topic.notes.attached?
-          topic.notes.purge
-          redirect_to course_topic_path(course, topic), notice: "Notes deleted successfully."
+        unless course
+            render json:{message:"Error in fetching course"}, status: :not_found
         else
-          redirect_to course_topic_path(course, topic), alert: "No notes available to delete."
+            topic = course.topics.find_by(id:params[:topic_id])
+            if topic
+                if topic.notes.attached?
+                    topic.notes.purge
+                    render json:{message:"Notes deleted successfully"}, status: :see_other 
+                else
+                    render json:{message:"No notes available"}, status: :no_content
+                end
+            else
+                render json:{message:"Topic not found"}, status: :internal_sever_error
+            end
         end
     end
       

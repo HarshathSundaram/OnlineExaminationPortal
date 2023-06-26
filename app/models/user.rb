@@ -4,4 +4,7 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
     belongs_to :userable, polymorphic: true
+
+  scope :student, ->{User.where("userable_type = ?","Student")}
+  scope :instructor, ->{User.where("userable_type = ?","Instructor")}
 end

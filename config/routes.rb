@@ -95,11 +95,9 @@ Rails.application.routes.draw do
   end
 
   #Course and Topic Notes route
-  get 'instructor/:instructor_id/course/:course_id/newnotes', to: 'courses#newnotes', as: 'new_course_notes'
   post 'instructor/:instructor_id/course/:course_id/newnotes', to: 'courses#createnotes', as: 'create_course_notes'
   delete 'instructor/:instructor_id/course/:course_id/deleteNotes', to: 'courses#deletenotes', as: 'delete_course_notes'
 
-  get 'course/:course_id/topic/:topic_id/newnotes', to: 'topics#newnotes', as: 'new_topic_notes'
   post 'course/:course_id/topic/:topic_id/newnotes', to: 'topics#createnotes', as: 'create_topic_notes'
   delete 'course/:course_id/topic/:topic_id/deleteNotes', to: 'topics#deletenotes', as: 'delete_topic_notes'
 
@@ -112,7 +110,6 @@ Rails.application.routes.draw do
 
 
   #Course and Topic Test Routes
-  get 'course/:course_id/question', to: 'tests#newcoursequestions', as: 'test_course_question'
   post 'course/:course_id/question', to: 'tests#createcoursequestions', as: 'test_course_create'
   get 'course/:course_id/test/:test_id/question', to: 'tests#showcoursequestions', as: 'test_course_edit'
   patch 'course/:course_id/test/:test_id/question', to: 'tests#updatecoursequestions', as: 'test_course_edit_question'
@@ -120,7 +117,6 @@ Rails.application.routes.draw do
   delete 'course/:course_id/test/:test_id', to: 'tests#destroycoursetests', as: 'test_course_delete'
 
 
-  get 'course/:course_id/topic/:topic_id/question', to: 'tests#newtopicquestions', as: 'test_topic_question'
   post 'course/:course_id/topic/:topic_id/question', to: 'tests#createtopicquestions', as: 'test_topic_create'
   get 'course/:course_id/topic/:topic_id/test/:test_id/question', to: 'tests#showtopicquestions', as: 'test_topic_edit'
   patch 'course/:course_id/topic/:topic_id/test/:test_id/question', to: 'tests#updatetopicquestions', as: 'test_topic_edit_question'
@@ -128,7 +124,30 @@ Rails.application.routes.draw do
   get 'course/:course_id/topic/:topic_id/tests/:test_id', to: 'tests#showtopicquestions', as: 'test_topic_show'
   delete 'course/:course_id/topic/:topic_id/tests/:test_id', to: 'tests#destroytopictests', as: 'test_topic_delete'
 
+  #Students Course and Topic Testes
+  get 'student/:student_id/course/:course_id/tests', to: 'students_tests#showcoursetests', as: 'students_course_tests'
+  get 'student/:student_id/course/:course_id/tests/:test_id', to: 'students_tests#takecoursetests', as: 'student_course_tests_take'
+  post 'student/:student_id/course/:course_id/test/:test_id', to: 'students_tests#validatecoursetest', as: 'student_course_validate'
+  get 'student/:student_id/course/:course_id/test/:test_id/result', to: 'students_tests#coursetestresult', as: 'student_course_result'
 
+  get 'student/:student_id/course/:course_id/topic/:topic_id/tests', to: 'students_tests#showtopictests', as: 'students_topic_tests'
+  get 'student/:student_id/course/:course_id/topic/:topic_id/tests/:test_id', to: 'students_tests#taketopictests', as: 'student_topic_tests_take'
+  post 'student/:student_id/course/:course_id/topic/:topic_id/test/:test_id', to: 'students_tests#validatetopictest', as: 'student_topic_validate'
+  get 'student/:student_id/course/:course_id/topic/:topic_id/test/:test_id/result', to: 'students_tests#topictestresult', as: 'student_topic_result'
+
+  #Students Courses and topics test history
+  get 'student/:student_id/test_history', to: 'test_histories#studentHistory', as: 'student_history'
+  get 'student/:student_id/test_history/:test_history_id', to: 'test_histories#showTestHistory', as: 'student_test_history'
+
+
+  #custom API
+  get 'instructors/course/:count', to: 'instructors#moreThanCourses'
+  get 'instructors/designation/:designation', to: 'instructors#instructorsWithDesignation'
+  get 'students/students_of_department/:department', to: 'students#studentsOfDepartment'
+  get 'students/student_enrolled/:count', to: 'students#studentEnrolledCourses'
+  get 'courses/topics/:count', to: 'courses#coursesWithTopics'
+  get 'tests/attended/:count', to: 'tests#testsAttended'
+  get 'courses/enrolled/:count', to: 'courses#coursesEnrolled'
   end
 
 
