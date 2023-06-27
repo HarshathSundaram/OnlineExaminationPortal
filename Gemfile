@@ -76,3 +76,4 @@ gem "devise", "~> 4.9"
 
 gem 'activeadmin'
 gem 'sass-rails'
+gem "doorkeeper", "~> 5.6"
