@@ -1,6 +1,7 @@
 class CoursesController < ApplicationController
     before_action :authenticate_user!  
     before_action :is_instructor?
+    before_action :is_instructor_course? , except: [:new]
 
     def show
         @instructor = Instructor.find_by(id:params[:instructor_id])
@@ -85,7 +86,10 @@ class CoursesController < ApplicationController
             flash[:alert] = "Unauthorized action"
             redirect_to student_path(current_user.userable_id)
         end
+    end
 
+    private
+    def is_instructor_course?
         course_id = params[:course_id] || params[:id] # Choose the appropriate parameter based on your route setup
         course = Course.find_by(id:course_id)
         

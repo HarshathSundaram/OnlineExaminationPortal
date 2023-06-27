@@ -1,6 +1,5 @@
 class Api::StudentsCoursesController < Api::ApiController
-    # before_action :authenticate_user! 
-    # before_action :is_student? 
+    before_action :is_student? 
     def index
         courses = Course.all
         unless courses
@@ -23,15 +22,11 @@ class Api::StudentsCoursesController < Api::ApiController
         else
             course = student.courses.find_by(id:params[:course_id])
             unless course
-                render json:{message:"No courses for the student #{student.user.name}"}, status: :no_content
+                render json:{message:"This is not your enrolled course"}, status: :forbidden
             else
                 render json:{"course":course,"student":student},status: :ok
             end
         end
-        # unless current_user.userable == @student && @student.courses.include?(@course)
-        #     flash[:alert] = "Unauthorized action"
-        #     redirect_to student_path(current_user.userable)
-        # end 
         
     end
 
@@ -42,7 +37,7 @@ class Api::StudentsCoursesController < Api::ApiController
         else
             course = student.courses.find_by(id:params[:course_id])
             unless course
-                render json:{message:"No courses for the student #{student.user.name}"}, status: :no_content
+                render json:{message: "You are not enrolled in this course"}, status: :bad_request
             else
                 topic = course.topics.find_by(id:params[:topic_id])
                 unless topic
@@ -51,25 +46,25 @@ class Api::StudentsCoursesController < Api::ApiController
                     render json:{"course":course,"student":student,"topic":topic},status: :ok
                 end
             end
-        end
-        # unless current_user.userable == @student && @student.courses.include?(@course)
-        #     flash[:alert] = "Unauthorized action"
-        #     redirect_to student_path(current_user.userable)
-        # end 
+        end 
     end
 
     def enroll
         student = Student.find_by(id:params[:student_id])
         if student
             course = Course.find_by(id:params[:course_id])
-            unless course
-                render json:{message:"Error in getting course"}, status: :internal_sever_error
-            else
-                if student.courses << course
-                    render json:{message:"#{student.user.name} successfully enrolled to a course"},status: :created
+            if course
+                if student.courses.include?(course)
+                    render json:{message:"You are already enrolled in this course"}, status: :bad_request
                 else
-                    render json:{message:"Error in enrolling to a course "},status: :not_modified 
+                    if student.courses << course
+                        render json:{message:"#{student.user.name} successfully enrolled to a course"},status: :created
+                    else
+                        render json:{message:"Error in enrolling to a course "},status: :not_modified 
+                    end
                 end
+            else
+                render json:{message:"Error in getting course"}, status: :internal_sever_error
             end
         else
             render json:{message:"Student not found"}, status: :internal_sever_error
@@ -81,29 +76,25 @@ class Api::StudentsCoursesController < Api::ApiController
         unless student
             render json:{message:"Student is not found"}, status: :internal_sever_error     
         else
-            course =student.courses.find_by(id:params[:course_id])     
+            course =student.courses.find_by(id:params[:course_id]) 
             if course
                 if student.courses.delete(course)
                     render json:{message:"#{student.user.name} successfully unenrolled to a course"},status: :accepted
                 else
                     render json:{message:"Error in unenroll a course"},status: :not_modified
-                end
+                end 
             else
-                render json:{message:"Error in getting course"}, status: :internal_sever_error
+                render json:{message:"Error in getting course"}, status: :internal_server_error
             end  
         end
-        
-        # unless current_user.userable == @student && @student.courses.include?(@course)
-        #     flash[:alert] = "Unauthorized action"
-        #     redirect_to student_path(current_user.userable)
-        # end 
+         
     end
 
     private
     def is_student?
-        unless user_signed_in? && current_user.userable_type == "Student"
-            flash[:alert] = "Unauthorized action"
-            redirect_to instructor_path(current_user.userable_id)
+        student = Student.find_by(id:params[:student_id])
+        unless user_signed_in? && current_user.userable_type == "Student"&& current_user.userable == student
+            render json:{message:"You have no access to student"}, status: :forbidden
         end 
     end
 end

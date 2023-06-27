@@ -1,5 +1,5 @@
 class Api::TestsController < Api::ApiController
-    #before_action :authenticate_user!  
+    before_action :is_instructor? , except: [:testsAttended]
     #Course
     def newcoursequestions
         course = Course.find_by(id:params[:course_id])        
@@ -52,6 +52,7 @@ class Api::TestsController < Api::ApiController
         course = Course.find_by(id:params[:course_id])
         if course
             test = course.tests.find_by(id:params[:test_id])
+            puts test
             unless test
                 render json:{message:"Error in fetching test details"}, status: :not_found
             else
@@ -319,5 +320,24 @@ class Api::TestsController < Api::ApiController
         else
             render json:test_name,status: :ok
         end     
+    end
+
+
+    private
+    def is_instructor?
+        unless user_signed_in? && current_user.userable_type == "Instructor"
+            render json:{messgae:'You are not able access instrucotr'}, status: :forbidden
+        end
+
+        course_id = params[:course_id] || params[:id] # Choose the appropriate parameter based on your route setup
+        course = Course.find_by(id:course_id)
+
+        unless course
+            render json:{message:"Course Not found"}, status: :not_found
+        else
+            unless course.instructor == current_user.userable
+                render json:{message:'You are not the insructor of this course'},status: :forbidden
+            end
+        end
     end
 end
