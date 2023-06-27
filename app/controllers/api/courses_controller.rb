@@ -1,11 +1,13 @@
-class Api::CoursesController < Api::ApiController
-    # before_action :authenticate_user!  
-    # before_action :is_instructor?
+class Api::CoursesController < Api::ApiController 
+    before_action :is_instructor?
 
     def show
         instructor = Instructor.find_by(id:params[:instructor_id])
         if instructor
             course = instructor.courses.find_by(id:params[:id])
+            unless course.instructor == current_user.userable
+                render json:{message:"You are not the instructor of this course"}, status: :forbidden
+            end
             if course
                 render json:course, status: :ok            
             else
@@ -46,10 +48,14 @@ class Api::CoursesController < Api::ApiController
         instructor = Instructor.find_by(id:params[:instructor_id])
         if instructor
             course = instructor.courses.find_by(id:params[:id])
-            if course.update(course_params)
-                render json: course, status: :accepted
+            if course
+                if course.update(course_params)
+                    render json: course, status: :accepted
+                else
+                    render json:{message: "Error in updating content"}, status: :not_modified
+                end
             else
-                render json:{message: "Error in updating content"}, status: :not_modified
+                render json:{error: "Couldn't find Course with id #{params[:id]}"},status: :not_found
             end
         else
             render json:{message:"Instructor is not found"}, status: :internal_sever_error
@@ -60,10 +66,14 @@ class Api::CoursesController < Api::ApiController
         instructor = Instructor.find_by(id:params[:instructor_id])
         if instructor
             course = instructor.courses.find_by(id:params[:id])
-            if course.destroy
-                render json:{message:"Course deleted successfully"}, status: :see_other
+            if course
+                if course.destroy
+                    render json:{message:"Course deleted successfully"}, status: :see_other
+                else
+                    rende json:{message: "Error in deleting course"}, status: :not_modified
+                end
             else
-                rende json:{message: "Error in deleting course"}, status: :not_modified
+                render json:{error: "Course not found"},status: :not_found
             end
         else
             render json:{message:"Instructor is not found"}, status: :internal_sever_error
@@ -82,6 +92,9 @@ class Api::CoursesController < Api::ApiController
         if instructor
             course = instructor.courses.find_by(id:params[:course_id])
             if course 
+                unless course.instructor == current_user.userable
+                    render json:{message:"You are not the instructor of this course"}, status: :forbidden
+                end
                 notes = params[:notes]
                 puts(notes)
                 course.notes.attach(notes)
@@ -103,6 +116,9 @@ class Api::CoursesController < Api::ApiController
         if instructor
             course = instructor.courses.find_by(id:params[:course_id])
             if course
+                unless course.instructor == current_user.userable
+                    render json:{message:"You are not the instructor of this course"}, status: :forbidden
+                end 
                 if course.notes.attached?
                     course.notes.purge
                     render json:{message:"Notes deleted successfully"}, status: :see_other 
@@ -162,16 +178,7 @@ class Api::CoursesController < Api::ApiController
     private
     def is_instructor?
         unless user_signed_in? && current_user.userable_type == "Instructor"
-            flash[:alert] = "Unauthorized action"
-            redirect_to student_path(current_user.userable_id)
-        end
-
-        course_id = params[:course_id] || params[:id] # Choose the appropriate parameter based on your route setup
-        course = Course.find_by(id:course_id)
-        
-        unless course && course.instructor == current_user.userable
-            flash[:alert] = "You are not the instructor of this course"
-            redirect_to instructor_path(current_user.userable_id) # Redirect to a different path or handle accordingly
-        end
+            render json:{message:"You are not allowed to access instructor"},status: :forbidden
+        end  
     end
 end

@@ -1,6 +1,5 @@
 class Api::InstructorsController < Api::ApiController
-  # before_action :authenticate_user!  
-  # before_action :is_instructor?
+  before_action :is_instructor?, except: [:instructorsWithDesignation, :moreThanCourses]
   def show
     # @user = current_user
     # @instructor = Instructor.find_by(id:@user.userable_id)
@@ -48,14 +47,16 @@ class Api::InstructorsController < Api::ApiController
   private
   def is_instructor?
       unless user_signed_in? && current_user.userable_type == "Instructor"
-          flash[:alert] = "Unauthorized action"
-          redirect_to student_path(current_user.userable_id)
+          render json:{message:"You are not allowed to access instructor"},status: :forbidden
       end
       instructor = Instructor.find_by(id:params[:id])
-      unless current_user.userable == instructor
-        flash[:alert] = "You are not allowed to access another instructor"
-        redirect_to instructor_path(current_user.userable)
-      end  
+      if instructor
+        unless current_user.userable == instructor
+          render json:{message:"You have access to this instructor"}, status: :forbidden
+        end 
+      else
+        render json:{message:"Instructor not found"}, status: :not_found
+      end 
   end
 
 end

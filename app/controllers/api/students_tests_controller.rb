@@ -1,5 +1,6 @@
 class Api::StudentsTestsController < Api::ApiController
-    # before_action :authenticate_user!  
+    before_action :is_student?
+    before_action :is_valid_course?
     def showcoursetests
         student = Student.find_by(id:params[:student_id])
         unless student
@@ -24,11 +25,11 @@ class Api::StudentsTestsController < Api::ApiController
     def takecoursetests
         student = Student.find_by(id:params[:student_id])
         unless student
-            render json:{message:"Student is not found"},status: :internal_sever_error
+            render json:{message:"Student is not found"},status: :internal_server_error
         else
             course = student.courses.find_by(id:params[:course_id])
             unless course
-                render json:{message:"Course is not found"},status: :internal_sever_error
+                render json:{message:"Course is not found"},status: :internal_server_error
             else
                 test = course.tests.find_by(id:params[:test_id])
                 unless test
@@ -43,15 +44,15 @@ class Api::StudentsTestsController < Api::ApiController
     def validatecoursetest
         student = Student.find_by(id:params[:student_id])
         unless student
-            render json:{message:"Student is not found"},status: :internal_sever_error
+            render json:{message:"Student is not found"},status: :internal_server_error
         else
             course = student.courses.find_by(id:params[:course_id])
             unless course
-                render json:{message:"Course is not found"},status: :internal_sever_error
+                render json:{message:"Course is not found"},status: :internal_server_error
             else
                 test = course.tests.find_by(id:params[:test_id])  
                 unless test
-                    render json:{message:"Test not found"},status: :internal_sever_error
+                    render json:{message:"Test not found"},status: :internal_server_error
                 else
                     answer_stu = params[:answer_stu] 
                     answer = Hash.new
@@ -78,21 +79,22 @@ class Api::StudentsTestsController < Api::ApiController
     def coursetestresult
         student = Student.find_by(id:params[:student_id])
         unless student
-            render json:{message:"Student not found"},status: :internal_sever_error
+            render json:{message:"Student not found"},status: :internal_server_error
         else
             course = student.courses.find_by(id:params[:course_id])
             unless course
-                render json:{message:"Course not found"},status: :internal_sever_error
+                render json:{message:"Course not found"},status: :internal_server_error
             else
                 test = course.tests.find_by(id:params[:test_id])
                 unless test
-                    render json:{message:"Test not found"},status: :internal_sever_error
-                end
-                result = student.test_histories.where(test_id: params[:test_id]).last
-                unless result
-                    render json:{message:"Error in fetching in result of the student"},status: :not_found
+                    render json:{message:"Test not found"},status: :internal_server_error
                 else
-                    render json:result, status: :ok
+                    result = student.test_histories.where(test_id: params[:test_id]).last
+                    unless result
+                        render json:{message:"Error in fetching in result of the student"},status: :not_found
+                    else
+                        render json:result, status: :ok
+                    end
                 end
             end 
         end
@@ -125,7 +127,7 @@ class Api::StudentsTestsController < Api::ApiController
     def taketopictests
         student = Student.find_by(id:params[:student_id])
         unless student
-            render json:{message:"Student not found"}, status: :internal_sever_error
+            render json:{message:"Student not found"}, status: :internal_server_error
         else
             course = student.courses.find_by(id:params[:course_id])
             unless course
@@ -149,19 +151,19 @@ class Api::StudentsTestsController < Api::ApiController
     def validatetopictest
         student = Student.find_by(id:params[:student_id])
         unless student
-            render json:{message:"Student not found"},status: :internal_sever_error
+            render json:{message:"Student not found"},status: :internal_server_error
         else
             course = student.courses.find_by(id:params[:course_id])
             unless course
-                render json:{message:"Course not found"},status: :internal_sever_error            
+                render json:{message:"Course not found"},status: :internal_server_error            
             else
                 topic = course.topics.find_by(id:params[:topic_id])
                 unless topic
-                    render json:{message:"Topic not found"}, status: :internal_sever_error
+                    render json:{message:"Topic not found"}, status: :internal_server_error
                 else
                     test = topic.tests.find_by(id:params[:test_id])
                     unless test
-                        render json:{message:"Test not found"}, status: :internal_sever_error
+                        render json:{message:"Test not found"}, status: :internal_server_error
                     else
                         answer_stu = params[:answer_stu] 
                         answer = Hash.new
@@ -189,19 +191,19 @@ class Api::StudentsTestsController < Api::ApiController
     def topictestresult
         student = Student.find_by(id:params[:student_id])
         unless student
-            render json:{message:"Student not found"},status: :internal_sever_error
+            render json:{message:"Student not found"},status: :internal_server_error
         else
             course = student.courses.find_by(id:params[:course_id])
             unless course
-                render json:{message:"Course not found"},status: :internal_sever_error
+                render json:{message:"Course not found"},status: :internal_server_error
             else
                 topic = course.topics.find_by(id:params[:topic_id])
                 unless topic
-                    render json:{message:"Topic not found"},status: :internal_sever_error
+                    render json:{message:"Topic not found"},status: :internal_server_error
                 else
                     test = topic.tests.find_by(id:params[:test_id])
                     unless test
-                        render json:{message:"Test not found"},status: :internal_sever_error
+                        render json:{message:"Test not found"},status: :internal_server_error
                     else
                         result = student.test_histories.where(test_id: params[:test_id]).last
                         unless result
@@ -212,6 +214,22 @@ class Api::StudentsTestsController < Api::ApiController
                     end
                 end
             end
+        end
+    end
+    private
+    def is_student?
+        student = Student.find_by(id:params[:student_id])
+        unless user_signed_in? && current_user.userable_type == "Student"&& current_user.userable == student
+            render json:{message:"You have no access to student"}, status: :forbidden
+        end 
+    end
+
+    private
+    def is_valid_course?
+        student = Student.find_by(id:params[:student_id])
+        course = Course.find_by(id:params[:course_id])
+        unless student.courses.include?(course)
+            render json:{message:"You are not enrolled in this course"}
         end
     end
 end

@@ -1,6 +1,5 @@
 class Api::StudentsController < Api::ApiController
-  # before_action :authenticate_user!  
-  # before_action :is_student?
+  before_action :is_student?, except: [:studentsOfDepartment, :studentEnrolledCourses]
   def show
     # @user = current_user
     # @student = Student.find_by(id:@user.userable_id)
@@ -49,13 +48,15 @@ class Api::StudentsController < Api::ApiController
   private
   def is_student?
     unless user_signed_in? && current_user.userable_type == "Student"
-        flash[:alert] = "Unauthorized action"
-        redirect_to instructor_path(current_user.userable_id)
+      render json:{message:'You have no access to student'},status: :forbidden
     end
     student = Student.find_by(id:params[:id])
-    unless current_user.userable == student
-      flash[:alert] = "You are not allowed to access another student"
-      redirect_to student_path(current_user.userable)
+    if student
+      unless current_user.userable == student
+        render json:{message:"You haved no access to another student"}, status: :forbidden
+      end
+    else
+      render json:{message:"Student Not found"}, status: :forbidden
     end  
   end
 end

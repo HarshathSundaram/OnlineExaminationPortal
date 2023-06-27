@@ -1,6 +1,5 @@
 class Api::TestHistoriesController < Api::ApiController
-    # before_action :authenticate_user!
-    # before_action :is_student?
+    before_action :is_student?
     def studentHistory
         student = Student.find_by(id:params[:student_id])
         unless student
@@ -34,13 +33,15 @@ class Api::TestHistoriesController < Api::ApiController
     private
     def is_student?
         unless user_signed_in? && current_user.userable_type == "Student"
-            flash[:alert] = "Unauthorized action"
-            redirect_to instructor_path(current_user.userable_id)
+            render json:{message:"You have not permitted to access student"}, status: :forbidden
         end
         student = Student.find_by(id:params[:student_id])
-        unless current_user.userable == student
-            flash[:alert] = "You are not allowed to access another student"
-            redirect_to student_path(current_user.userable)
+        if student
+            unless current_user.userable == student
+                render json:{message:"You have no access to another student"}, status: :forbidden
+            end
+        else
+            render json:{message:"Unauthorized student"}, status: :unauthorized
         end  
     end
 end
