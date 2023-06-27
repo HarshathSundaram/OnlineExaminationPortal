@@ -1,5 +1,6 @@
 class Api::StudentsCoursesController < Api::ApiController
     before_action :is_student? 
+    
     def index
         courses = Course.all
         unless courses

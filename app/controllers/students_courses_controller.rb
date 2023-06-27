@@ -1,6 +1,7 @@
 class StudentsCoursesController < ApplicationController
     before_action :authenticate_user! 
     before_action :is_student? 
+    
     def index
         @courses = Course.all
         @student = Student.find_by(id:params[:student_id])
@@ -50,5 +51,6 @@ class StudentsCoursesController < ApplicationController
             redirect_to instructor_path(current_user.userable_id)
         end 
     end
+
     
 end
