@@ -1,6 +1,6 @@
 class Api::CoursesController < Api::ApiController 
     before_action :is_instructor?
-    before_action :is_course_instructor? , except: [:coursesWithTopics, :coursesEnrolled, :create]
+    before_action :is_course_instructor? , except: [:coursesWithTopics, :coursesEnrolled]
     before_action :is_instructor_course?, except:[:coursesWithTopics, :coursesEnrolled, :create]
     def show
         instructor = Instructor.find_by(id:params[:instructor_id])
@@ -16,15 +16,11 @@ class Api::CoursesController < Api::ApiController
 
     def create
         instructor = Instructor.find_by(id:params[:instructor_id])
-        if instructor
-            course = instructor.courses.build(course_params)
-            if course.save
-                render json:{message: "Course created successfully"}, status: :created
-            else
-                render json:{message: "Some Error in Creating Course"}, status: :unprocessable_entity 
-            end
+        course = instructor.courses.build(course_params)
+        if course.save
+            render json:{message: "Course created successfully"}, status: :created
         else
-            render json:{message:"Instructor not found"}, status: :not_found
+            render json:{message: "Some Error in Creating Course"}, status: :unprocessable_entity 
         end
     end
 

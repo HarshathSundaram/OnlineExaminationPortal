@@ -1,7 +1,8 @@
 class CoursesController < ApplicationController
     before_action :authenticate_user!  
     before_action :is_instructor?
-    before_action :is_instructor_course? , except: [:new]
+    before_action :is_course_instructor?
+    before_action :is_instructor_course? , except: [:new, :create]
 
     def show
         @instructor = Instructor.find_by(id:params[:instructor_id])
@@ -85,6 +86,20 @@ class CoursesController < ApplicationController
         unless user_signed_in? && current_user.userable_type == "Instructor"
             flash[:alert] = "Unauthorized action"
             redirect_to student_path(current_user.userable_id)
+        end
+    end
+
+    private
+    def is_course_instructor?
+        instructor = Instructor.find_by(id:params[:instructor_id])
+        if instructor
+            unless instructor == current_user.userable
+                flash[:alert] = "You are not allowed to access other instructor"
+                redirect_to instructor_path(current_user.userable)
+            end
+        else
+            flash[:alert] = "Instructor not found"
+            redirect_to instructor_path(current_user.userable)
         end
     end
 
