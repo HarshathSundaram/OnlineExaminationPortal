@@ -81,19 +81,41 @@ class TopicsController < ApplicationController
         params.require(:topic).permit(:name,:description,:notes)
     end
 
-     private
+    private
     def is_instructor?
         unless user_signed_in? && current_user.userable_type == "Instructor"
             flash[:alert] = "Unauthorized action"
             redirect_to student_path(current_user.userable_id)
         end
+    end
 
-        course_id = params[:course_id] || params[:id] # Choose the appropriate parameter based on your route setup
-        course = Course.find_by(id:course_id)
-        
-        unless course && course.instructor == current_user.userable
-            flash[:alert] = "You are not the instructor of this course"
-            redirect_to instructor_path(current_user.userable_id) # Redirect to a different path or handle accordingly
+    private
+    def is_instructor_course?
+        course = Course.find_by(id:params[:course_id])
+        if course
+            unless course.instructor == current_user.userable
+                flash[:alert] = "You are not allowed to access another instructor course"
+                redirect_to instructor_path(current_user.userable)
+            end
+        else
+            flash[:alert] = "Course not found"
+            redirect_to instructor_path(current_user.userable)
+        end
+    end
+
+    private 
+    def is_course_topic?
+        course = Course.find_by(id:params[:course_id])
+        topic_id = params[:topic_id] || params[:id]
+        topic = Topic.find_by(topic_id)
+        if topic
+            unless course.topics.include?(topic)
+                flash[:alert] = "Topic not belongs to this course"
+                redirect_to instructor_course_path(current_user.userable,course)
+            end
+        else
+            flash[:alert] = "Topic not found"
+            redirect_to instructor_course_path(current_user.userable,course)
         end
     end
 

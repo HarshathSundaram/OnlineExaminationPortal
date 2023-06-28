@@ -2,6 +2,9 @@ class TestsController < ApplicationController
     before_action :authenticate_user! 
     before_action :is_instructor? 
     before_action :is_instructor_course?
+    before_action :is_course_topic?, except: [:newcoursequestions,:createcoursequestions,:showcoursequestions,:updatecoursequestions,:showcoursetests,:destroycoursetests]
+    before_action :is_course_test?, except: [:newcoursequestions,:createcoursequestions,:showcoursetests,:newtopicquestions,:createtopicquestions,:showtopicquestions,:updatetopicquestions,:showtopictests,:destroytopictests]
+    before_action :is_topic_test?, except: [:newtopicquestions,:createtopicquestions,:showtopictests,:newcoursequestions,:createcoursequestions,:showcoursequestions,:updatecoursequestions,:showcoursetests,:destroycoursetests]
     #Course
     def newcoursequestions
         @course = Course.find_by(id:params[:course_id])        
@@ -207,4 +210,51 @@ class TestsController < ApplicationController
             redirect_to instructor_path(current_user.userable)
         end        
     end
+
+    private
+    def is_course_topic?
+        course = Course.find_by(id:params[:course_id])
+        topic = Topic.find_by(id:params[:topic_id])
+        if topic
+           unless course.topics.include?(topic)
+                flash[:alert] = "Cannot access another topic course"
+                redirect_to instructor_course_path(current_user.userable,course) 
+           end 
+        else
+            flash[:alert] = "Course not found"
+            redirect_to instructor_course_path(current_user.userable,course)
+        end
+    end
+
+    private
+    def is_course_test?
+        course = Course.find_by(id:params[:course_id])
+        test = Test.find_by(id:params[:test_id])
+        if test
+            unless course.tests.include?(test)
+                flash[:alert] = "You are allowed to access another course test"
+                redirect_to test_course_path(course)
+            end
+        else
+            flash[:alert] = "Test not found"
+            redirect_to test_course_path(course)            
+        end
+    end
+
+    private
+    def is_topic_test?
+        topic = Topic.find_by(id:params[:topic_id])
+        test = Test.find_by(id:params[:test_id])
+        if test
+            unless topic.tests.include?(test)
+                flash[:alert] = "Test is not in this topic"
+                redirect_to test_topic_path(params[:course_id],topic)
+            end
+        else
+            flash[:alert] = "Test not found"
+            redirect_to test_topic_path(params[:course_id],topic)     
+        end
+    end
+
+
 end
