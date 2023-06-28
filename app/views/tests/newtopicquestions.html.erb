@@ -4,62 +4,145 @@
 
 <%= form_with url: test_topic_create_path,local: true do |form|%>
     <div>
-        <%= form.hidden_field :id, values: @topic.id%>
+        <%= form.hidden_field :id, values: @course.id%>
         <div class="input-group m-3" style="width:30rem;">
             <div class="input-group-prepend">
                 <span class="input-group-text" id="basic-addon1">Test Name</span>
             </div>
             <%= form.text_field :name, class:"form-control", required:true%>
         </div>
-        <%10.times do |i|%>
+        <div id="question-container">
             <div class="card m-2" style="width: 50rem;">
                 <div class="card-body">
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="basic-addon1">Question <%= i+1%>: </span>
+                            <span class="input-group-text" id="basic-addon1">Question 1: </span>
                         </div>
-                        <%=form.text_field :"question[#{i}]", required:true, class: "form-control"  %>
+                        <input type="text" name="test[question][0]" required class="form-control">
                     </div>
-
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">Option 1:</span>
                         </div>
-                        <%=form.text_field :"option[#{i}][0]", required:true, class: "form-control"%>
+                        <input type="text" name="test[option][0][0]" required class="form-control">
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">Option 2:</span>
                         </div>
-                        <%=form.text_field :"option[#{i}][1]", required:true, class: "form-control"%>
+                        <input type="text" name="test[option][0][1]" required class="form-control">
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">Option 3:</span>
                         </div>
-                        <%=form.text_field :"option[#{i}][2]", required:true, class: "form-control"%>
+                        <input type="text" name="test[option][0][2]" required class="form-control">
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <span class="input-group-text" id="basic-addon1">Option 4:</span>
                         </div>
-                        <%=form.text_field :"option[#{i}][3]", required:true, class: "form-control"%>
+                        <input type="text" name="test[option][0][3]" required class="form-control">
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Answer(Options): </label>
                         </div>
-                        <%=form.select :"answer[#{i}]",['1','2','3','4'], class:"custom-select",id:"inputGroupSelect01"%>
+                        <select name="test[answer][0]" class="custom-select" id="inputGroupSelect01">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                        </select>
                     </div>
                     <div class="input-group mb-3">
                         <div class="input-group-prepend">
                             <label class="input-group-text" for="inputGroupSelect01">Mark: </label>
                         </div>
-                        <%=form.select :"mark[#{i}]",['1','2','3','4','5'], class:"custom-select",id:"inputGroupSelect01"%>
+                        <select name="test[mark][0]" class="custom-select" id="inputGroupSelect01">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
                     </div>
                 </div>
             </div>
-        <%end%>
+        </div>
+        <button id="add-more-button" class="btn btn-primary">Add More</button>
         <%= form.submit "Create Test", class: "btn btn-primary m-3"%>
     </div>
 <%end%>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+  $(document).ready(function() {
+    var questionCounter = 1; // Keeps track of the number of questions added
+
+    $('#add-more-button').click(function() {
+      var newQuestion = `
+        <div class="card m-2" style="width: 50rem;">
+          <div class="card-body">
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Question ${questionCounter+1}: </span>
+              </div>
+              <input type="text" name="test[question][${questionCounter}]" required class="form-control">
+            </div>
+
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Option 1:</span>
+              </div>
+              <input type="text" name="test[option][${questionCounter}][0]" required class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Option 2:</span>
+              </div>
+              <input type="text" name="test[option][${questionCounter}][1]" required class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Option 3:</span>
+              </div>
+              <input type="text" name="test[option][${questionCounter}][2]" required class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text" id="basic-addon1">Option 4:</span>
+              </div>
+              <input type="text" name="test[option][${questionCounter}][3]" required class="form-control">
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Answer(Options): </label>
+              </div>
+              <select name="test[answer][${questionCounter}]" class="custom-select" id="inputGroupSelect01">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+              </select>
+            </div>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <label class="input-group-text" for="inputGroupSelect01">Mark: </label>
+              </div>
+              <select name="test[mark][${questionCounter}]" class="custom-select" id="inputGroupSelect01">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      `;
+      $('#question-container').append(newQuestion);
+      questionCounter++;
+    });
+  });
+</script>

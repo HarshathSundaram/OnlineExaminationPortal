@@ -3,7 +3,14 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-    belongs_to :userable, polymorphic: true
+  
+  belongs_to :userable, polymorphic: true
+  validates :name, length: {minimum:5,maximum:20}
+  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP ,message:"Invalid Email" }
+  validates :password, length: {minimum:6,message:"length must be a minimum of 6"}
+  GENDER_OPTIONS = %w(male female other).freeze
+  validates :gender, presence: true, inclusion: { in: GENDER_OPTIONS, case_sensitive: false }
+
 
   scope :student, ->{User.where("userable_type = ?","Student")}
   scope :instructor, ->{User.where("userable_type = ?","Instructor")}

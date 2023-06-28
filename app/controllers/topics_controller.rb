@@ -1,6 +1,7 @@
 class TopicsController < ApplicationController
     before_action :authenticate_user!  
     before_action :is_instructor?
+    before_action :is_instructor_course?
     before_action :is_course_topic? ,except: [:new,:create]
     def show
         @course = Course.find_by(id:params[:course_id])
@@ -31,7 +32,7 @@ class TopicsController < ApplicationController
         @course = Course.find_by(id:params[:course_id])
         @topic = @course.topics.find_by(id:params[:id])
         if @topic.update(topic_params)
-            redirect_to course_path(@course), notice: "Topic is updated!!!"
+            redirect_to instructor_course_path(@course.instructor,@course), notice: "Topic is updated!!!"
         else
             render :edit, status: :unprocessable_entity
         end
@@ -41,7 +42,7 @@ class TopicsController < ApplicationController
         @course = Course.find_by(id:params[:course_id])
         @topic = @course.topics.find_by(id:params[:id])
         @topic.destroy
-        redirect_to course_path(@course), status: :see_other, alert: "Topic is deleted!!!"
+        redirect_to instructor_course_path(@course.instructor,@course), status: :see_other, alert: "Topic is deleted!!!"
     end
 
 
@@ -108,9 +109,9 @@ class TopicsController < ApplicationController
     def is_course_topic?
         course = Course.find_by(id:params[:course_id])
         topic_id = params[:topic_id] || params[:id]
-        topic = Topic.find_by(topic_id)
+        topic = Topic.find_by(id:topic_id)
         if topic
-            unless course.topics.include?(topic)
+            unless course && course.topics.include?(topic)
                 flash[:alert] = "Topic not belongs to this course"
                 redirect_to instructor_course_path(current_user.userable,course)
             end
