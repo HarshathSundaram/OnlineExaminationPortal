@@ -1,5 +1,7 @@
 class TestsController < ApplicationController
-    before_action :authenticate_user!  
+    before_action :authenticate_user! 
+    before_action :is_instructor? 
+    before_action :is_instructor_course?
     #Course
     def newcoursequestions
         @course = Course.find_by(id:params[:course_id])        
@@ -182,5 +184,27 @@ class TestsController < ApplicationController
         @test = @topic.tests.find_by(id:params[:test_id])
         @test.destroy
         redirect_to test_topic_path(@course,@topic), alert: "Test is deleted!!!"
+    end
+
+    private
+    def is_instructor?
+        unless user_signed_in? && current_user.userable_type == "Instructor"
+            flash[:alert] = "Unauthorized action"
+            redirect_to student_path(current_user.userable)
+        end
+    end
+    
+    private
+    def is_instructor_course?
+        course = Course.find_by(id:params[:course_id])
+        if course
+            unless current_user.userable == course.instructor
+                flash[:alert] = "You are not allowed to access another instructor course"
+                redirect_to instructor_course_path(course.instructor,course)
+            end
+        else
+            flash[:alert] = "Course not found"
+            redirect_to instructor_path(current_user.userable)
+        end        
     end
 end

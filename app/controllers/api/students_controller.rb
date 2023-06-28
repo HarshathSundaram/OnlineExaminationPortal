@@ -4,13 +4,8 @@ class Api::StudentsController < Api::ApiController
     # @user = current_user
     # @student = Student.find_by(id:@user.userable_id)
     student = Student.find_by(id:params[:id])
-    if student
-      name = student.user.name
-      render json:{"name": name,"Student": student}, status: :ok
-    else
-        render json:{message: "Student not found"}, status: :internal_server_error
-    end
-    
+    name = student.user.name
+    render json:{"name": name,"Student": student}, status: :ok
   end
 
   def studentsOfDepartment
