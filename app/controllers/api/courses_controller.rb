@@ -1,21 +1,11 @@
 class Api::CoursesController < Api::ApiController 
     before_action :is_instructor?
-
+    before_action :is_course_instructor? , except: [:coursesWithTopics, :coursesEnrolled, :create]
+    before_action :is_instructor_course?, except:[:coursesWithTopics, :coursesEnrolled, :create]
     def show
         instructor = Instructor.find_by(id:params[:instructor_id])
-        if instructor
-            course = instructor.courses.find_by(id:params[:id])
-            unless course.instructor == current_user.userable
-                render json:{message:"You are not the instructor of this course"}, status: :forbidden
-            end
-            if course
-                render json:course, status: :ok            
-            else
-                render json:{message: "Course Not found"}, status: :not_found
-            end
-        else
-            render json:{message:"Instructor is not found"}, status: :internal_server_error
-        end
+        course = instructor.courses.find_by(id:params[:id])
+        render json:course, status: :ok 
     end
 
     def new
@@ -34,7 +24,7 @@ class Api::CoursesController < Api::ApiController
                 render json:{message: "Some Error in Creating Course"}, status: :unprocessable_entity 
             end
         else
-            render json:{message:"Instructor is not found"}, status: :internal_sever_error
+            render json:{message:"Instructor not found"}, status: :not_found
         end
     end
 
@@ -46,37 +36,21 @@ class Api::CoursesController < Api::ApiController
 
     def update
         instructor = Instructor.find_by(id:params[:instructor_id])
-        if instructor
-            course = instructor.courses.find_by(id:params[:id])
-            if course
-                if course.update(course_params)
-                    render json: course, status: :accepted
-                else
-                    render json:{message: "Error in updating content"}, status: :not_modified
-                end
-            else
-                render json:{error: "Couldn't find Course with id #{params[:id]}"},status: :not_found
-            end
+        course = instructor.courses.find_by(id:params[:id])
+        if course.update(course_params)
+            render json: course, status: :accepted
         else
-            render json:{message:"Instructor is not found"}, status: :internal_sever_error
+            render json:{message: "Error in updating content"}, status: :not_modified
         end
     end
 
     def destroy
         instructor = Instructor.find_by(id:params[:instructor_id])
-        if instructor
-            course = instructor.courses.find_by(id:params[:id])
-            if course
-                if course.destroy
-                    render json:{message:"Course deleted successfully"}, status: :see_other
-                else
-                    rende json:{message: "Error in deleting course"}, status: :not_modified
-                end
-            else
-                render json:{error: "Course not found"},status: :not_found
-            end
+        course = instructor.courses.find_by(id:params[:id])
+        if course.destroy
+            render json:{message:"Course deleted successfully"}, status: :see_other
         else
-            render json:{message:"Instructor is not found"}, status: :internal_sever_error
+            render json:{message: "Error in deleting course"}, status: :not_modified
         end
     end
 
@@ -86,50 +60,26 @@ class Api::CoursesController < Api::ApiController
     end
 
     def createnotes
-        puts "Params"
-        puts params
         instructor = Instructor.find_by(id:params[:instructor_id])
-        if instructor
-            course = instructor.courses.find_by(id:params[:course_id])
-            if course 
-                unless course.instructor == current_user.userable
-                    render json:{message:"You are not the instructor of this course"}, status: :forbidden
-                end
-                notes = params[:notes]
-                puts(notes)
-                course.notes.attach(notes)
-                if course.save
-                    render json:course.notes, status: :ok
-                else
-                    render json:{message:"Could not save notes"},status: :unprocessable_entity
-                end
-            else
-                render json:{message:"Course not found"}, status: :internal_sever_error
-            end
+        course = instructor.courses.find_by(id:params[:course_id])
+        notes = params[:notes]
+        puts(notes)
+        course.notes.attach(notes)
+        if course.save
+            render json:course.notes, status: :ok
         else
-            render json:{message:"Instructor is not found"}, status: :internal_sever_error
+            render json:{message:"Could not save notes"},status: :unprocessable_entity
         end       
     end
 
     def deletenotes
         instructor = Instructor.find_by(id:params[:instructor_id])
-        if instructor
-            course = instructor.courses.find_by(id:params[:course_id])
-            if course
-                unless course.instructor == current_user.userable
-                    render json:{message:"You are not the instructor of this course"}, status: :forbidden
-                end 
-                if course.notes.attached?
-                    course.notes.purge
-                    render json:{message:"Notes deleted successfully"}, status: :see_other 
-                else
-                    render json:{message:"No notes available"}, status: :no_content
-                end
-            else
-                render json:{message:"Course is not found"}, status: :not_found
-            end
+        course = instructor.courses.find_by(id:params[:course_id])
+        if course.notes.attached?
+            course.notes.purge
+            render json:{message:"Notes deleted successfully"}, status: :see_other 
         else
-            render json:{message:"Instructor is not found"}, status: :internal_sever_error
+            render json:{message:"No notes available"}, status: :no_content
         end
     end
 
@@ -177,8 +127,33 @@ class Api::CoursesController < Api::ApiController
 
     private
     def is_instructor?
-        unless user_signed_in? && current_user.userable_type == "Instructor"
-            render json:{message:"You are not allowed to access instructor"},status: :forbidden
+        unless user_signed_in? 
+            render json:{message:"Unauthorized action"},status: :unauthorized
         end  
+    end
+
+    private 
+    def is_course_instructor?
+        instructor = Instructor.find_by(id:params[:instructor_id])
+        if instructor
+            unless instructor== current_user.userable && current_user.userable_type == "Instructor"
+                render json:{message:"You are not allowed to access another instructor"}, status: :forbidden
+            end 
+        else
+            render json:{message:"Instructor is not found"}, status: :not_found
+        end
+    end
+
+    private 
+    def is_instructor_course?
+        course_id = params[:course_id] || params[:id]
+        course = Course.find_by(id:course_id)
+        if course
+            unless current_user.userable == course.instructor
+                render json:{message:"You are not instructor of this course"}, status: :forbidden
+            end
+        else
+            render json:{message:"Course not found"}, status: :not_found
+        end
     end
 end
