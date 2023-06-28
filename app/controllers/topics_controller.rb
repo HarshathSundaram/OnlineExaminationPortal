@@ -1,6 +1,7 @@
 class TopicsController < ApplicationController
     before_action :authenticate_user!  
     before_action :is_instructor?
+    before_action :is_course_topic? ,except: [:new,:create]
     def show
         @course = Course.find_by(id:params[:course_id])
         @topic = @course.topics.find_by(id:params[:id])
