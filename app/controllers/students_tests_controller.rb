@@ -27,9 +27,10 @@ class StudentsTestsController < ApplicationController
         answer = Hash.new
         total_mark = 0
         mark_scored = 0
-        @test.questions.each do |key, value|
-            answer[key] = value['answer']
-            if value['answer'] == answer_stu[key]
+        p @test.questions
+        @test.questions.each.with_index do |value,index|
+            p value['answer'] == answer_stu[index.to_s]
+            if value['answer'] == answer_stu[index.to_s]
                 mark_scored = mark_scored + (value['mark'].to_i)
             end
             total_mark = total_mark+ (value['mark'].to_i)
@@ -72,9 +73,8 @@ class StudentsTestsController < ApplicationController
         answer = Hash.new
         total_mark = 0
         mark_scored = 0
-        @test.questions.each do |key, value|
-            answer[key] = value['answer']
-            if value['answer'] == answer_stu[key]
+        @test.questions.each.with_index do |value,index|
+            if value['answer'] == answer_stu[index.to_s]
                 mark_scored = mark_scored + (value['mark'].to_i)
             end
             total_mark = total_mark+ (value['mark'].to_i)

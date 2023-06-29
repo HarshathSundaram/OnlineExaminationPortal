@@ -7,28 +7,28 @@
 </div>
 
 <%=form_with url:student_course_validate_path(@student,@course,@test) do |f|%>
-    <% @test.questions.each do |key, value| %>
+    <% @test.questions.each.with_index do |value,index| %>
         <div class="card m-2" style="width: 18rem;">
             <div class="card-body">
 
                 <div>
-                    <%= f.label "Question #{key.to_i+1}" %>
+                    <%= f.label "Question #{index+1}" %>
                     <b><%=value["question"]%></b>
                 </div>
                 <div>
-                    <%= f.radio_button :"answer_stu[#{key}]", value["options"]['0'] %>
+                    <%= f.radio_button :"answer_stu[#{index}]", value["options"]['0'] %>
                     <%= f.label value["options"]['0']%>
                 </div>
                 <div>
-                    <%= f.radio_button :"answer_stu[#{key}]", value["options"]['1'] %>
+                    <%= f.radio_button :"answer_stu[#{index}]", value["options"]['1'] %>
                     <%= f.label value["options"]['1']%>
                 </div>
                 <div>
-                    <%= f.radio_button :"answer_stu[#{key}]", value["options"]['2'] %>
+                    <%= f.radio_button :"answer_stu[#{index}]", value["options"]['2'] %>
                     <%= f.label value["options"]['2']%>
                 </div>
                 <div>
-                    <%= f.radio_button :"answer_stu[#{key}]", value["options"]['3'] %>
+                    <%= f.radio_button :"answer_stu[#{index}]", value["options"]['3'] %>
                     <%= f.label value["options"]['3']%>
                 </div>
             </div>

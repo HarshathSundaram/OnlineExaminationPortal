@@ -11,26 +11,31 @@ class TestsController < ApplicationController
     end
     def createcoursequestions
         @course = Course.find_by(id:params[:course_id])
+        puts params
         name = params[:name]
         question = params[:test][:question]
         options = params[:test][:option]
         answer = params[:test][:answer]
         mark = params[:test][:mark]
         a = question.keys
-        test = Hash.new
+        test = []
         a.each do |key|
             ans = Integer(answer[key])
             ans = ans-1
-            test[key] = {
+            test << {
                 "question" => question[key],
                 "options" => options[key],
                 "answer" => options[key][ans.to_s],
                 "mark" => mark[key]
-            }
+              }
         end
         @t = Test.new(name: name, questions: test)
-        @course.tests << @t
-        redirect_to test_course_path(@course), notice: "Test created successfully"
+        if @course.tests << @t
+            redirect_to test_course_path(@course), notice: "Test created successfully"
+        else
+            errors = @t.errors.full_messages.join(", ")
+            render :newcoursequestions, status: :unprocessable_entity, alert: :errors
+        end
     end
     def showcoursequestions
         @course = Course.find_by(id:params[:course_id])
@@ -45,22 +50,22 @@ class TestsController < ApplicationController
         answer = params[:answer]
         mark = params[:mark]
         a = question.keys
-        ques = Hash.new
+        puts params
+        ques = []
         a.each do |key|
             ans = Integer(answer[key])
             ans = ans-1
             puts ans
             puts "Option Answer"
             puts options[key][ans.to_s]
-            ques[key] = {
+            ques << {
                 "question" => question[key],
                 "options" => options[key],
                 "answer" => options[key][ans.to_s],
                 "mark" => mark[key]
-            }
+              }
         end
         puts(ques)
-        @new_t = Test.new(name: name, questions: ques)
         if @test.update({name:name,questions:ques})
             if !@test.test_histories.blank?
                 @test_histories = @test.test_histories.all
@@ -68,9 +73,9 @@ class TestsController < ApplicationController
                   total_mark = 0
                   mark_scored = 0
                   answer_stu = history.answers
-                  ques.each do |key, value|
+                  ques.each.with_index do |value,index|
                     total_mark = total_mark + (value['mark'].to_i)
-                    if value['answer'] == answer_stu[key]
+                    if value['answer'] == answer_stu[index.to_s]
                       mark_scored = mark_scored + (value['mark'].to_i)
                     end
                     history.update({ mark_scored: mark_scored, total_mark: total_mark })
@@ -78,6 +83,9 @@ class TestsController < ApplicationController
                 end
               end
             redirect_to test_course_path(@course, @test), notice: "Test is updated!!!"
+        else
+            errors = @t.errors.full_messages.join(", ")
+            render :showcoursequestions, status: :unprocessable_entity, alert: :errors
         end
     end
 
@@ -108,11 +116,11 @@ class TestsController < ApplicationController
         answer = params[:test][:answer]
         mark = params[:test][:mark]
         a = question.keys
-        test = Hash.new
+        test = []
         a.each do |key|
             ans = Integer(answer[key])
             ans = ans-1
-            test[key] = {
+            test << {
                 "question" => question[key],
                 "options" => options[key],
                 "answer" => options[key][ans.to_s],
@@ -120,8 +128,13 @@ class TestsController < ApplicationController
             }
         end
         @t = Test.new(name: name, questions: test)
-        @topic.tests << @t
-        redirect_to course_topic_path(@course,@topic), notice: "Test created successfully"
+        if @topic.tests << @t
+            redirect_to course_topic_path(@course,@topic), notice: "Test created successfully"
+        else
+            errors = @t.errors.full_messages.join(", ")
+            flash[:alert] = errors
+            render :newtopicquestions, status: :unprocessable_entity, alert: :errors
+        end
     end
 
     def showtopicquestions
@@ -139,14 +152,14 @@ class TestsController < ApplicationController
         answer = params[:answer]
         mark = params[:mark]
         a = question.keys
-        ques = Hash.new
+        ques = []
         a.each do |key|
             ans = Integer(answer[key])
             ans = ans-1
             puts ans
             puts "Option Answer"
             puts options[key][ans.to_s]
-            ques[key] = {
+            ques << {
                 "question" => question[key],
                 "options" => options[key],
                 "answer" => options[key][ans.to_s],
@@ -162,9 +175,9 @@ class TestsController < ApplicationController
                   total_mark = 0
                   mark_scored = 0
                   answer_stu = history.answers
-                  ques.each do |key, value|
+                  ques.each.with_index do |value,index|
                     total_mark = total_mark + (value['mark'].to_i)
-                    if value['answer'] == answer_stu[key]
+                    if value['answer'] == answer_stu[index.to_s]
                       mark_scored = mark_scored + (value['mark'].to_i)
                     end
                     history.update({ mark_scored: mark_scored, total_mark: total_mark })
@@ -172,6 +185,10 @@ class TestsController < ApplicationController
                 end
               end
             redirect_to test_topic_path(@course,@topic, @test), notice:"Test is updated!!!"
+        else
+            errors = @t.errors.full_messages.join(", ")
+            flash[:alert] = errors
+            render :showtopicquestions, status: :unprocessable_entity, alert: :errors
         end
     end
 

@@ -10,39 +10,39 @@
       </div>
       <%= form.text_field :name, value: @test.name, class: "form-control", required: true %>
     </div>
-    <% @test.questions.each do |key, value| %>
+    <% @test.questions.each.with_index do |value,index| %>
       <div class="card m-2" style="width: 50rem;">
         <div class="card-body">
           <div class="input-group mb-3">
             <div class="input-group-prepend">
-              <span class="input-group-text" id="basic-addon1">Question <%= key.to_i + 1 %>:</span>
+              <span class="input-group-text" id="basic-addon1">Question <%= index + 1 %>:</span>
             </div>
-            <%= form.text_field :"question[#{key}]", value: value['question'], required: true, class: "form-control" %>
+            <%= form.text_field :"question[#{index}]", value: value['question'], required: true, class: "form-control" %>
           </div>
 
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text" id="basic-addon1">Option 1:</span>
             </div>
-            <%= form.text_field :"option[#{key}][0]", value: value['options']['0'], required: true, class: "form-control" %>
+            <%= form.text_field :"option[#{index}][0]", value: value['options']['0'], required: true, class: "form-control" %>
           </div>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text" id="basic-addon1">Option 2:</span>
             </div>
-            <%= form.text_field :"option[#{key}][1]", value: value['options']['1'], required: true, class: "form-control" %>
+            <%= form.text_field :"option[#{index}][1]", value: value['options']['1'], required: true, class: "form-control" %>
           </div>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text" id="basic-addon1">Option 3:</span>
             </div>
-            <%= form.text_field :"option[#{key}][2]", value: value['options']['2'], required: true, class: "form-control" %>
+            <%= form.text_field :"option[#{index}][2]", value: value['options']['2'], required: true, class: "form-control" %>
           </div>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <span class="input-group-text" id="basic-addon1">Option 4:</span>
             </div>
-            <%= form.text_field :"option[#{key}][3]", value: value['options']['3'], required: true, class: "form-control" %>
+            <%= form.text_field :"option[#{index}][3]", value: value['options']['3'], required: true, class: "form-control" %>
           </div>
           <% ans = value['options'].key(value['answer']) %>
           <% ans = ans.to_i + 1 %>
@@ -50,13 +50,13 @@
             <div class="input-group-prepend">
               <label class="input-group-text" for="inputGroupSelect01">Answer (Options):</label>
             </div>
-            <%= form.select :"answer[#{key}]", options_for_select(['1', '2', '3', '4'], ans.to_s), class: "custom-select", id: "inputGroupSelect01" %>
+            <%= form.select :"answer[#{index}]", options_for_select(['1', '2', '3', '4'], ans.to_s), class: "custom-select", id: "inputGroupSelect01" %>
           </div>
           <div class="input-group mb-3">
             <div class="input-group-prepend">
               <label class="input-group-text" for="inputGroupSelect01">Mark:</label>
             </div>
-            <%= form.select :"mark[#{key}]", options_for_select(['1', '2', '3', '4', '5'], value['mark']), class: "custom-select", id: "inputGroupSelect01" %>
+            <%= form.select :"mark[#{index}]", options_for_select(['1', '2', '3', '4', '5'], value['mark']), class: "custom-select", id: "inputGroupSelect01" %>
           </div>
         </div>
       </div>

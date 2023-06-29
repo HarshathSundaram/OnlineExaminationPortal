@@ -6,12 +6,12 @@
   </div>
 </div>
 
-<% @test.questions.each do |key, value| %>
+<% @test.questions.each.with_index do |value,index| %>
   <div class="card m-2" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">Question: <%= value['question']%></h5>
       <h6 class="card-subtitle mb-2 text-muted">Answer: <%= value['answer']%></h6>
-      <h6 class="card-subtitle mb-2 text-muted">Your Answer: <span class="<%= @result.answers[key] == value['answer'] ? 'text-success' : 'text-danger' %>"><%= @result.answers[key] %></span></h6>
+      <h6 class="card-subtitle mb-2 text-muted">Your Answer: <span class="<%= @result.answers[index.to_s] == value['answer'] ? 'text-success' : 'text-danger' %>"><%= @result.answers[index.to_s] %></span></h6>
     </div>
   </div>
 <% end %>

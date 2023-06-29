@@ -11,6 +11,8 @@ class Student < ApplicationRecord
    validates :year , presence: :true
    validate :year_format
 
+   before_create :change_department?
+
    private
    def year_format
       return if year.blank? || year.length != 1 || year.to_i.to_s != year
@@ -20,4 +22,9 @@ class Student < ApplicationRecord
    
    scope :student_enrolled_more_than_5_course, -> { joins(:courses).group('students.id').having('COUNT(courses.id) >= 5 ') }
    scope :student_enrolled_less_than_5_course, -> { joins(:courses).group('students.id').having('COUNT(courses.id) < 5 ') }
+
+
+   def change_department?
+      self.department.upcase!      
+   end
 end
