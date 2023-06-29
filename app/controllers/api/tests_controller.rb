@@ -16,11 +16,11 @@ class Api::TestsController < Api::ApiController
         answer = params[:test][:answer]
         mark = params[:test][:mark]
         a = question.keys
-        test = Hash.new
+        test = []
         a.each do |key|
             ans = Integer(answer[key])
             ans = ans-1
-            test[key] = {
+            test << {
                 "question" => question[key],
                 "options" => options[key],
                 "answer" => options[key][ans.to_s],
@@ -48,14 +48,14 @@ class Api::TestsController < Api::ApiController
         answer = params[:answer]
         mark = params[:mark]
         a = question.keys
-        ques = Hash.new
+        ques = []
         a.each do |key|
             ans = Integer(answer[key])
             ans = ans-1
             puts ans
             puts "Option Answer"
             puts options[key][ans.to_s]
-            ques[key] = {
+            ques << {
                 "question" => question[key],
                 "options" => options[key],
                 "answer" => options[key][ans.to_s],
@@ -121,11 +121,11 @@ class Api::TestsController < Api::ApiController
         answer = params[:answer]
         mark = params[:mark]
         a = question.keys
-        test = Hash.new
+        test = []
         a.each do |key|
             ans = Integer(answer[key])
             ans = ans-1
-            test[key] = {
+            test << {
                 "question" => question[key],
                 "options" => options[key],
                 "answer" => options[key][ans.to_s],
@@ -156,14 +156,14 @@ class Api::TestsController < Api::ApiController
         answer = params[:answer]
         mark = params[:mark]
         a = question.keys
-        ques = Hash.new
+        ques = []
         a.each do |key|
             ans = Integer(answer[key])
             ans = ans-1
             puts ans
             puts "Option Answer"
             puts options[key][ans.to_s]
-            ques[key] = {
+            ques << {
                 "question" => question[key],
                 "options" => options[key],
                 "answer" => options[key][ans.to_s],

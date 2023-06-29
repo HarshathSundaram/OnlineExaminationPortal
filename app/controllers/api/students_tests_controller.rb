@@ -27,12 +27,10 @@ class Api::StudentsTestsController < Api::ApiController
         course = student.courses.find_by(id:params[:course_id])
         test = course.tests.find_by(id:params[:test_id])  
         answer_stu = params[:answer_stu] 
-        answer = Hash.new
         total_mark = 0
         mark_scored = 0
-        test.questions.each do |key, value|
-            answer[key] = value['answer']
-            if value['answer'] == answer_stu[key]
+        test.questions.each.with_index do |value,index|
+            if value['answer'] == answer_stu[index.to_s]
                 mark_scored = mark_scored + (value['mark'].to_i)
             end
             total_mark = total_mark+ (value['mark'].to_i)
@@ -87,12 +85,10 @@ class Api::StudentsTestsController < Api::ApiController
         topic = course.topics.find_by(id:params[:topic_id])
         test = topic.tests.find_by(id:params[:test_id])
         answer_stu = params[:answer_stu] 
-        answer = Hash.new
         total_mark = 0
         mark_scored = 0
-        test.questions.each do |key, value|
-            answer[key] = value['answer']
-            if value['answer'] == answer_stu[key]
+        test.questions.each.with_index do |value,index|
+            if value['answer'] == answer_stu[index.to_s]
                 mark_scored = mark_scored + (value['mark'].to_i)
             end
             total_mark = total_mark+ (value['mark'].to_i)
