@@ -40,9 +40,8 @@ ActiveAdmin.register TestHistory do
       end.join("<br>").html_safe
     end
     column "Correct Answer" do|model|
-      model.test.questions.map.with_index do|(_,answer),index|
-        "Answer for Question #{index+1}: #{answer['answer']}"
-      end .join("<br>").html_safe     
+      questions = model.test.questions.map { |item| item['answer'] }
+      questions.each.with_index.map { |question, index| "Answer for Question #{index + 1}: #{question}" }.join('<br>').html_safe 
     end
   end
 

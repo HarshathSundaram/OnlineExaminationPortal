@@ -21,7 +21,7 @@ class CoursesController < ApplicationController
         if @course.save
             redirect_to instructor_path(@instructor), notice: "Course created successfully."
         else
-            render :new
+            render :new, status: :unprocessable_entity
         end
     end
 
@@ -78,7 +78,7 @@ class CoursesController < ApplicationController
 
     private
     def course_params
-        params.require(:course).permit(:name,:category,:notes)
+        params.require(:course).permit(:name,:category)
     end
 
     private

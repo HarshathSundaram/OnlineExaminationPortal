@@ -11,12 +11,14 @@ class InstructorsController < ApplicationController
       unless user_signed_in? && current_user.userable_type == "Instructor"
           flash[:alert] = "Unauthorized action"
           redirect_to student_path(current_user.userable_id)
+      else
+        instructor = Instructor.find_by(id:params[:id])
+        unless current_user.userable == instructor
+          flash[:alert] = "You are not allowed to access another instructor"
+          redirect_to instructor_path(current_user.userable)
+        end 
       end
-      instructor = Instructor.find_by(id:params[:id])
-      unless current_user.userable == instructor
-        flash[:alert] = "You are not allowed to access another instructor"
-        redirect_to instructor_path(current_user.userable)
-      end  
+       
   end
 
 end

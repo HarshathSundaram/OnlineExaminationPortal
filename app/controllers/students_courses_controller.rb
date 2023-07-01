@@ -12,10 +12,6 @@ class StudentsCoursesController < ApplicationController
     def showcourse
         @student = Student.find_by(id:params[:student_id])
         @course = Course.find_by(id:params[:course_id])
-        unless current_user.userable == @student && @student.courses.include?(@course)
-            flash[:alert] = "Unauthorized action"
-            redirect_to student_path(current_user.userable)
-        end 
     end
 
     def showtopic
@@ -48,12 +44,14 @@ class StudentsCoursesController < ApplicationController
         unless user_signed_in? && current_user.userable_type == "Student"
             flash[:alert] = "Unauthorized action"
             redirect_to instructor_path(current_user.userable_id)
+        else
+            unless student == current_user.userable
+                flash[:alert] = "You are not allowed to access another student"
+                redirect_to student_path(current_user.userable)
+            end
         end
         
-        unless student == current_user.userable
-            flash[:alert] = "You are not allowed to access another student"
-            redirect_to student_path(current_user.userable)
-        end
+        
     end
 
     private

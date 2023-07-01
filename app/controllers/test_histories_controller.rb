@@ -18,16 +18,17 @@ class TestHistoriesController < ApplicationController
         unless user_signed_in? && current_user.userable_type == "Student"
             flash[:alert] = "Unauthorized action"
             redirect_to instructor_path(current_user.userable)
-        end
-        student = Student.find_by(id:params[:student_id])
-        if student
-            unless current_user.userable == student
-                flash[:alert] = "You are not allowed to access another student"
-                redirect_to student_path(current_user.userable)
-            end 
         else
-            flash[:alert] = "Student not found"
-            redirect_to student_path(current_user.userable)
+            student = Student.find_by(id:params[:student_id])
+            if student
+                unless current_user.userable == student
+                    flash[:alert] = "You are not allowed to access another student"
+                    redirect_to student_path(current_user.userable)
+                end 
+            else
+                flash[:alert] = "Student not found"
+                redirect_to student_path(current_user.userable)
+            end
         end 
     end
     

@@ -11,7 +11,6 @@ class TestsController < ApplicationController
     end
     def createcoursequestions
         @course = Course.find_by(id:params[:course_id])
-        puts params
         name = params[:name]
         question = params[:test][:question]
         options = params[:test][:option]
@@ -50,14 +49,10 @@ class TestsController < ApplicationController
         answer = params[:answer]
         mark = params[:mark]
         a = question.keys
-        puts params
         ques = []
         a.each do |key|
             ans = Integer(answer[key])
             ans = ans-1
-            puts ans
-            puts "Option Answer"
-            puts options[key][ans.to_s]
             ques << {
                 "question" => question[key],
                 "options" => options[key],
@@ -65,7 +60,6 @@ class TestsController < ApplicationController
                 "mark" => mark[key]
               }
         end
-        puts(ques)
         if @test.update({name:name,questions:ques})
             if !@test.test_histories.blank?
                 @test_histories = @test.test_histories.all
@@ -82,7 +76,7 @@ class TestsController < ApplicationController
                   end
                 end
               end
-            redirect_to test_course_path(@course, @test), notice: "Test is updated!!!"
+            redirect_to test_course_path(@course), notice: "Test is updated!!!"
         else
             errors = @t.errors.full_messages.join(", ")
             render :showcoursequestions, status: :unprocessable_entity, alert: :errors
@@ -156,9 +150,6 @@ class TestsController < ApplicationController
         a.each do |key|
             ans = Integer(answer[key])
             ans = ans-1
-            puts ans
-            puts "Option Answer"
-            puts options[key][ans.to_s]
             ques << {
                 "question" => question[key],
                 "options" => options[key],
@@ -166,7 +157,6 @@ class TestsController < ApplicationController
                 "mark" => mark[key]
             }
         end
-        puts(ques)
         @new_t = Test.new(name: name, questions: ques)
         if @test.update({name:name,questions:ques})
             if !@test.test_histories.blank?
@@ -184,7 +174,7 @@ class TestsController < ApplicationController
                   end
                 end
               end
-            redirect_to test_topic_path(@course,@topic, @test), notice:"Test is updated!!!"
+            redirect_to test_topic_path(@course,@topic), notice:"Test is updated!!!"
         else
             errors = @t.errors.full_messages.join(", ")
             flash[:alert] = errors
@@ -219,7 +209,7 @@ class TestsController < ApplicationController
         if course
             unless current_user.userable == course.instructor
                 flash[:alert] = "You are not allowed to access another instructor course"
-                redirect_to instructor_course_path(course.instructor,course)
+                redirect_to instructor_path(current_user.userable)
             end
         else
             flash[:alert] = "Course not found"
@@ -237,7 +227,7 @@ class TestsController < ApplicationController
                 redirect_to instructor_course_path(current_user.userable,course) 
            end 
         else
-            flash[:alert] = "Course not found"
+            flash[:alert] = "Topic not found"
             redirect_to instructor_course_path(current_user.userable,course)
         end
     end
@@ -248,7 +238,7 @@ class TestsController < ApplicationController
         test = Test.find_by(id:params[:test_id])
         if test
             unless course.tests.include?(test)
-                flash[:alert] = "You are allowed to access another course test"
+                flash[:alert] = "You are not allowed to access another course test"
                 redirect_to test_course_path(course)
             end
         else

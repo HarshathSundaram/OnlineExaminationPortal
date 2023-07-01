@@ -5,10 +5,10 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   
   belongs_to :userable, polymorphic: true
-  validates :name, length: {minimum:5,maximum:20}
-  validates :email, format: { with: URI::MailTo::EMAIL_REGEXP ,message:"Invalid Email" }
-  validates :password, length: {minimum:6,message:"length must be a minimum of 6"}
-
+  validates :name,presence: :true, length: {minimum:4,maximum:20}
+  validates :email,presence: :true, format: { with: URI::MailTo::EMAIL_REGEXP ,message:"Invalid Email" }
+  validates :password,presence: :true, length: {minimum:6,message:"length must be a minimum of 6"}
+  validates :gender, presence: true
 
   scope :student, ->{User.where("userable_type = ?","Student")}
   scope :instructor, ->{User.where("userable_type = ?","Instructor")}

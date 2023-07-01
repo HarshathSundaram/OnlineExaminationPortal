@@ -23,13 +23,10 @@ class StudentsTestsController < ApplicationController
         @test = @course.tests.find_by(id:params[:test_id])  
         answer_stu = params[:answer_stu]
         answer = params[:answer]
-        mark = params[:mark]
         answer = Hash.new
         total_mark = 0
         mark_scored = 0
-        p @test.questions
         @test.questions.each.with_index do |value,index|
-            p value['answer'] == answer_stu[index.to_s]
             if value['answer'] == answer_stu[index.to_s]
                 mark_scored = mark_scored + (value['mark'].to_i)
             end
@@ -98,6 +95,11 @@ class StudentsTestsController < ApplicationController
         unless user_signed_in? && current_user.userable_type == "Student"
             flash[:alert] = "Unauthorized action"
             redirect_to instructor_path(current_user.userable_id)
+        else
+            student = Student.find_by(id:params[:student_id])
+            unless current_user.userable == student
+                redirect_to student_path(current_user.userable),alert: "You are not allowed to access another student"
+            end
         end 
     end
     private

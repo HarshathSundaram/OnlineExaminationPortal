@@ -9,16 +9,8 @@ class Student < ApplicationRecord
 
    validates :department , presence: :true
    validates :year , presence: :true
-   validate :year_format
 
    before_create :change_department?
-
-   private
-   def year_format
-      return if year.blank? || year.length != 1 || year.to_i.to_s != year
-
-      errors.add(:year, "must be a single-digit number")
-   end
    
    scope :student_enrolled_more_than_5_course, -> { joins(:courses).group('students.id').having('COUNT(courses.id) >= 5 ') }
    scope :student_enrolled_less_than_5_course, -> { joins(:courses).group('students.id').having('COUNT(courses.id) < 5 ') }
