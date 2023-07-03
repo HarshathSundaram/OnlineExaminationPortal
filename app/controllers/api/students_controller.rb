@@ -44,14 +44,15 @@ class Api::StudentsController < Api::ApiController
   def is_student?
     unless user_signed_in? && current_user.userable_type == "Student"
       render json:{message:'You have no access to student'},status: :forbidden
-    end
-    student = Student.find_by(id:params[:id])
-    if student
-      unless current_user.userable == student
-        render json:{message:"You haved no access to another student"}, status: :forbidden
-      end
     else
-      render json:{message:"Student Not found"}, status: :forbidden
+      student = Student.find_by(id:params[:id])
+      if student
+        unless current_user.userable == student
+          render json:{message:"You haved no access to another student"}, status: :forbidden
+        end
+      else
+        render json:{message:"Student Not found"}, status: :not_found
+      end
     end  
   end
 end

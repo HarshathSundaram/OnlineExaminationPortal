@@ -382,7 +382,7 @@ RSpec.describe CoursesController, type: :controller do
     end
 
 
-    describe "edit" do
+    describe "update" do
         context "when user is not signed in" do
             before do
                 patch :update ,params:{instructor_id:instructor.id,id:course.id}

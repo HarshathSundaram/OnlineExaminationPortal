@@ -5,7 +5,7 @@ class StudentsCoursesController < ApplicationController
     before_action :enrollment?, only: [:enroll] 
     before_action :is_course_topic?, only: [:showtopic]
     def index
-        @courses = Course.all
+        @courses = Course.page(params[:page])
         @student = Student.find_by(id:params[:student_id])
     end
 

@@ -10,6 +10,7 @@ class Api::TestsController < Api::ApiController
     end
     def createcoursequestions
         course = Course.find_by(id:params[:course_id])
+        p params
         name = params[:name]
         question = params[:test][:question]
         options = params[:test][:option]
@@ -134,7 +135,7 @@ class Api::TestsController < Api::ApiController
         end
         t = Test.new(name: name, questions: test)
         if topic.tests << t
-            render json:t,status: :ok
+            render json:t,status: :created
         else
             render json:{message:"Error while creating test"},status: :unprocessable_entity
         end

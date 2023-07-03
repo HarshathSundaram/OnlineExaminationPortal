@@ -1,0 +1,39 @@
+<%# The container tag
+  - available local variables
+    current_page:  a page object for the currently displayed page
+    total_pages:   total number of pages
+    per_page:      number of items to fetch per page
+    remote:        data-remote
+    paginator:     the paginator that renders the pagination tags inside
+-%>
+<%= paginator.render do -%>
+  <nav class="pagination" role="navigation" aria-label="pager">
+    <ul class="pagination justify-content-center"> <!-- Added Bootstrap class -->
+      <li class="page-item <%= 'disabled' if current_page.first? %>"> <!-- Added Bootstrap class and disabled state -->
+        <%= first_page_tag unless current_page.first? %> 
+      </li>
+      <li class="page-item <%= 'disabled' if current_page.first? %>"> <!-- Added Bootstrap class and disabled state -->
+        <%= prev_page_tag unless current_page.first? %> 
+      </li>
+      <% each_page do |page| -%>
+        <% if page.display_tag? -%>
+          <li class="page-item <%= 'active' if page.current? %>"> <!-- Added Bootstrap class and active state -->
+            <%= page_tag page %>
+          </li>
+        <% elsif !page.was_truncated? -%>
+          <li class="page-item disabled"> <!-- Added Bootstrap class and disabled state -->
+            <%= gap_tag %>
+          </li>
+        <% end -%>
+      <% end -%>
+      <% unless current_page.out_of_range? %>
+        <li class="page-item <%= 'disabled' if current_page.last? %>"> <!-- Added Bootstrap class and disabled state -->
+          <%= next_page_tag unless current_page.last? %> 
+        </li>
+        <li class="page-item <%= 'disabled' if current_page.last? %>"> <!-- Added Bootstrap class and disabled state -->
+          <%= last_page_tag unless current_page.last? %> 
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% end -%>

@@ -2,28 +2,26 @@
 <h1 class="text-muted text-center m-2">List of Courses</h1>
 <div class="row dflex justify-content-center align-items-center m-4">
     <% @courses.each do |course|%>
-        <div class="col-md-6">
-            <div class="card m-2" style="width: 20rem;">
-                <h1 class="card-image-top d-flex justify-content-center m-2 display-3"><i class="fas fa-book"></i></h1>
-                <div class="card-body text-center">
-                    <h5 class="card-title"><%= course.name %></h5>
-                    <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> <%= course.instructor.user.name %></h6>
-                    <h6 class="card-subtitle mb-2 text-muted">Course Category: <%= course.category %></h6>
-                    <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-check"></i> <%= course.students.count %> students enrolled</h6>
-                    <%stu = @student.courses.where(id: course.id)%>
-                    <%if stu.length == 0%>
-                        <p><%= link_to "Enroll", student_course_enroll_path(@student,course), class: "btn btn-success w-100" %></p>
-                    <%else%>
-                        <p><%= link_to "UnEnroll", student_course_unenroll_path(@student,course), data:{
-                            turbo_confirm: "Are You Sure?"
-                        }, class: "btn btn-danger w-100" %></p>
-                    <%end%>
-                </div>
+        <div class="card m-2" style="width: 20rem;">
+            <h1 class="card-image-top d-flex justify-content-center m-2 display-3"><i class="fas fa-book"></i></h1>
+            <div class="card-body text-center">
+                <h5 class="card-title"><%= course.name %></h5>
+                <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-user"></i> <%= course.instructor.user.name %></h6>
+                <h6 class="card-subtitle mb-2 text-muted">Course Category: <%= course.category %></h6>
+                <h6 class="card-subtitle mb-2 text-muted"><i class="fas fa-check"></i> <%= course.students.count %> students enrolled</h6>
+                <%stu = @student.courses.where(id: course.id)%>
+                <%if stu.length == 0%>
+                    <p><%= link_to "Enroll", student_course_enroll_path(@student,course), class: "btn btn-success w-100" %></p>
+                <%else%>
+                    <p><%= link_to "UnEnroll", student_course_unenroll_path(@student,course), data:{
+                        turbo_confirm: "Are You Sure?"
+                    }, class: "btn btn-danger w-100" %></p>
+                <%end%>
             </div>
         </div>
     <%end%>
+    <%=paginate @courses%> 
 </div>
-
 
 
 <style>

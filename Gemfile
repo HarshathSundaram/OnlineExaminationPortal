@@ -87,3 +87,5 @@ gem 'sass-rails'
 gem "doorkeeper", "~> 5.6"
 
 gem "rails-controller-testing", "~> 1.0"
+
+gem "kaminari", "~> 1.2"

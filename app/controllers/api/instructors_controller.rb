@@ -42,16 +42,17 @@ class Api::InstructorsController < Api::ApiController
   end
   private
   def is_instructor?
-      unless user_signed_in? 
-          render json:{message:"Unauthorized action"},status: :unauthorized
-      end
-      instructor = Instructor.find_by(id:params[:id])
-      if instructor
-        unless current_user.userable == instructor && current_user.userable_type == "Instructor"
-          render json:{message:"You have access to this instructor"}, status: :forbidden
-        end 
+      unless user_signed_in? && current_user.userable_type == "Instructor"
+          render json:{message:"Unauthorized action"},status: :forbidden
       else
-        render json:{message:"Instructor not found"}, status: :not_found
+        instructor = Instructor.find_by(id:params[:id])
+        if instructor
+          unless current_user.userable == instructor
+            render json:{message:"You have not access to this instructor"}, status: :forbidden
+          end 
+        else
+          render json:{message:"Instructor not found"}, status: :not_found
+        end
       end 
   end
 

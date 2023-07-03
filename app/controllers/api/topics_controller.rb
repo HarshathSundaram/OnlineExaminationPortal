@@ -18,7 +18,7 @@ class Api::TopicsController < Api::ApiController
         course = Course.find_by(id:params[:course_id])
         topic = course.topics.new(topic_params)
         if topic.save
-            render json:topic,status: :ok
+            render json:topic,status: :created
         else
             render json:{message:"Error while creating topic"}, status: :unprocessable_entity
         end

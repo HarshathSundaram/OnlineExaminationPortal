@@ -1,8 +1,24 @@
+<div class="container">
+  <%=form_with url:student_history_path(@student),method: :get do |f|%>
+    <div class="row">
+      <div class="col-md-4"><br>
+        <%=f.number_field :mark ,class:"form-control",placeholder:"Mark less than"%>
+      </div>
+      <div class="col-md-4"><br>
+        <%=f.number_field :mark1 ,class:"form-control",placeholder:"Mark greater than"%>
+      </div>
+      <div class="col-md-3">
+        <%=f.submit "Search",class:"btn btn-secondary m-4"%>
+      </div>
+    </div>
+  <%end%>
+</div>
+
 <div class="row dflex justify-content-center align-items-center">
     <div class="card m-2" style="width: 18rem;">
         <div class="card-body">
             <h5 class="card-title">Student: <%= @student.user.name%></h5>
-            <h6 class="card-subtitle mb-2 text-muted">Attended Tests : <%= @test_histories.count %></h6>
+            <h6 class="card-subtitle mb-2 text-muted">Total Tests : <%= @test_histories.count %></h6>
         </div>
     </div>
     <center>

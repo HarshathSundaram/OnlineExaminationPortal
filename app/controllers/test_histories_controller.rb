@@ -5,6 +5,13 @@ class TestHistoriesController < ApplicationController
     def studentHistory
         @student = Student.find_by(id:params[:student_id])
         @test_histories = @student.test_histories.all
+        if params[:mark] and params[:mark].length!=0
+            @test_histories = @test_histories.where( "mark_scored < ?", params[:mark])
+        end
+        if params[:mark1] and params[:mark1].length!=0
+            @test_histories = @test_histories.where( "mark_scored > ?", params[:mark1])
+        end
+        
     end
 
     def showTestHistory
