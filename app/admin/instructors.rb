@@ -18,15 +18,11 @@ ActiveAdmin.register Instructor do
     selectable_column
     id_column
     column "Name" do |model|
-      model.user.name
-    end
-    column "Email" do |model|
-      model.user.email
-    end
-    column "Gender" do |model|
-      model.user.gender
+      model.user
     end
     column :designation
+
+    actions
   end 
 
   filter :courses

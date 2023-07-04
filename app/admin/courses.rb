@@ -29,7 +29,8 @@ ActiveAdmin.register Course do
       else
         "No notes attached"
       end
-    end 
+    end
+    actions 
   end
 
   filter :topics

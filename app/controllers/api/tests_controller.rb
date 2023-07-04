@@ -117,10 +117,10 @@ class Api::TestsController < Api::ApiController
         course = Course.find_by(id: params[:course_id])
         topic = course.topics.find_by(id: params[:topic_id])
         name = params[:name]
-        question = params[:question]
-        options = params[:option]
-        answer = params[:answer]
-        mark = params[:mark]
+        question = params[:test][:question]
+        options = params[:test][:option]
+        answer = params[:test][:answer]
+        mark = params[:test][:mark]
         a = question.keys
         test = []
         a.each do |key|
@@ -134,6 +134,7 @@ class Api::TestsController < Api::ApiController
             }
         end
         t = Test.new(name: name, questions: test)
+        p t
         if topic.tests << t
             render json:t,status: :created
         else

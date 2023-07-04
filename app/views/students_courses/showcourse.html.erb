@@ -1,40 +1,74 @@
-<div class="row d-flex justify-content-center align-items-center">
-    <h1 class="display-1 text-center m-3"><%=@course.name%></h1>
-    <h5 class="text-muted text-center m-3">
-         <i class="fas fa-user"></i>
-        <%=@course.instructor.user.name%>
-    </h5>
-    <h5 class="text-muted text-center m-3">
-        <i class="fas fa-book"></i>
-        <%=@course.category%>
-    </h5>
-    <%= link_to "View Tests", students_course_tests_path(@student,@course), class: "btn btn-primary w-25 m-3" %> 
-    <% if @course.notes.blank? %>
-      <p class="text-danger text-center m-2">No notes available for this course &#128532;</p>
-    <% else %>
-      <p class="text-center"><%= @course.notes.filename %></p>
-      <%= link_to url_for(@course.notes), class: "btn btn-primary w-25" do %>
-        <i class="fas fa-download mr-2"></i> View Notes
-      <% end %>
-    <% end %> 
-    <% if @course.topics.blank? %>
-      <p class="text-danger text-center m-3">There are no topics for <%= @course.name %>  &#128532;</p>
-    <% else %>
-      <p class="text-secondary text-center m-3">Topics in this course are</p>
-      <% @course.topics.each do |topic| %>
-        <div class="card m-3" style="width: 50rem;">
-            <div class="card-body">
-                <h2 class="card-title text-center display-1">
-                    <%= topic.name %>
-                </h2>
-                <p class="card-text lead"><%= topic.description %></p>
-                <%=link_to "View", student_course_topic_path(@student,@course,topic.id), class: "btn btn-info w-100" %>
-            </div>
-        </div>
-      <% end %>
-    <% end %>
+<style>
+body{
+  background-image: url("https://wallpapercave.com/wp/wp4430570.jpg");
+  background-size: cover;
+  background-position: center;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
+.container {
+  animation: fadeIn 3s;
+}
+</style>
+
+
+<div class="container">
+  <div class="row d-flex justify-content-center align-items-center">
+    <div class="col-md-6">
+      <div class="card opacity-25">
+        <div class="card-body">
+          <h1 class="display-1 text-center m-3"><%=@course.name%></h1>
+          <h5 class="text-muted text-center m-3">
+              <i class="fas fa-user"></i>
+              <%=@course.instructor.user.name%>
+          </h5>
+          <h5 class="text-muted text-center m-3">
+            <i class="fas fa-book"></i>
+            <%=@course.category%>
+          </h5>
+          <div class="text-center">
+               <%= link_to "View Tests", students_course_tests_path(@student,@course), class: "btn btn-primary w-25 m-3" %> 
+          </div>
+         
+          <% if @course.notes.blank? %>
+            <p class="text-danger text-center m-2">No notes available for this course &#128532;</p>
+          <% else %>
+            <div class="text-center">
+              <p class="text-center"><%= @course.notes.filename %></p>
+              <%= link_to url_for(@course.notes), class: "btn btn-primary w-2" do %>
+                <i class="fas fa-download mr-2"></i> View Notes
+              <% end %>
+            </div>
+          <% end %> 
+          <% if @course.topics.blank? %>
+            <p class="text-danger text-center m-3">There are no topics for <%= @course.name %>  &#128532;</p>
+          <% else %>
+            <p class="text-secondary text-center m-3">Topics in this course are</p>
+            <% @course.topics.each do |topic| %>
+              <div class="card m-3">
+                  <div class="card-body">
+                      <h2 class="card-title text-center display-1">
+                          <%= topic.name %>
+                      </h2>
+                      <p class="card-text lead"><%= topic.description %></p>
+                      <%=link_to "View", student_course_topic_path(@student,@course,topic.id), class: "btn btn-info w-100" %>
+                  </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
+
 
 <style>
   .card{

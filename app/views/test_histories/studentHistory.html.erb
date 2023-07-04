@@ -1,3 +1,24 @@
+<style>
+body{
+  background-image: url("https://previews.123rf.com/images/atlasfoto/atlasfoto2003/atlasfoto200300580/142050038-inscription-exam-results-and-stationary-on-wooden-background-top-view.jpg");
+  background-size: cover;
+  background-position: center;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.container {
+  animation: fadeIn 3s;
+}
+</style>
+
+
 <div class="container">
   <%=form_with url:student_history_path(@student),method: :get do |f|%>
     <div class="row">

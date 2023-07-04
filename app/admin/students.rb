@@ -29,6 +29,7 @@ ActiveAdmin.register Student do
     end
     column :department
     column :year
+    actions
   end
 
   filter :courses

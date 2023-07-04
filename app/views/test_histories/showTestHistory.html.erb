@@ -1,19 +1,52 @@
-<div class="card m-2" style="width: 18rem;">
-  <div class="card-body">
-    <h5 class="card-title">Student: <%= @student.user.name%></h5>
-    <h6 class="card-subtitle mb-2 text-muted">Test: <%= @test.name%></h6>
-    <h6 class="card-subtitle mb-2 text-dark">Result: <%=@test_history.mark_scored%>/<%=@test_history.total_mark%></h6>
+<style>
+body{
+  background-image: url("https://previews.123rf.com/images/atlasfoto/atlasfoto2003/atlasfoto200300580/142050038-inscription-exam-results-and-stationary-on-wooden-background-top-view.jpg");
+  background-size: cover;
+  background-position: center;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.container {
+  animation: fadeIn 3s;
+}
+</style>
+
+<div class="container ">
+  <div class="row d-flex justify-content-center align-items-center mx-auto" style="height: 100vh;">
+    <div class="col-md-6">
+      <div class="card opacity-25">
+        <h3 class="card-title text-center"><%=@test.name%> Result</h3>
+        <div class="card-body">
+          <div class="card m-2" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">Student: <%= @student.user.name%></h5>
+              <h6 class="card-subtitle mb-2 text-muted">Test: <%= @test.name%></h6>
+              <h6 class="card-subtitle mb-2 text-dark">Result: <%=@test_history.mark_scored%>/<%=@test_history.total_mark%></h6>
+            </div>
+          </div>
+
+          <% @test.questions.each.with_index do |value,index| %>
+            <div class="card m-2" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title">Question: <%= value['question']%></h5>
+                <h6 class="card-subtitle mb-2 text-muted">Answer: <%= value['answer']%></h6>
+                <h6 class="card-subtitle mb-2 text-muted">Your Answer: <span class="<%= @test_history.answers[index.to_s] == value['answer'] ? 'text-success' : 'text-danger' %>"><%= @test_history.answers[index.to_s] %></span></h6>
+              </div>
+            </div>
+          <% end %>
+
+          <%= link_to "OK", student_path(@student), class: "btn btn-primary m-3" %>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
-<% @test.questions.each.with_index do |value,index| %>
-  <div class="card m-2" style="width: 18rem;">
-    <div class="card-body">
-      <h5 class="card-title">Question: <%= value['question']%></h5>
-      <h6 class="card-subtitle mb-2 text-muted">Answer: <%= value['answer']%></h6>
-      <h6 class="card-subtitle mb-2 text-muted">Your Answer: <span class="<%= @test_history.answers[index.to_s] == value['answer'] ? 'text-success' : 'text-danger' %>"><%= @test_history.answers[index.to_s] %></span></h6>
-    </div>
-  </div>
-<% end %>
 
-<%= link_to "OK", student_path(@student), class: "btn btn-primary m-3" %>

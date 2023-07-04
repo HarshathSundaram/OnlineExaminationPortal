@@ -70,6 +70,7 @@
                 </div>
             </div>
         </div>
+        <button id ="remove-button" class="btn btn-danger"> Remove </button>
         <button id="add-more-button" class="btn btn-primary">Add More</button>
         <%= form.submit "Create Test", class: "btn btn-primary m-3"%>
     </div>
@@ -79,7 +80,9 @@
 <script>
   $(document).ready(function() {
     var questionCounter = 1; // Keeps track of the number of questions added
-
+    if (questionCounter === 1) {
+      $('#remove-button').hide();
+    }
     $('#add-more-button').click(function() {
       var newQuestion = `
         <div class="card m-2" style="width: 50rem;">
@@ -143,6 +146,18 @@
       `;
       $('#question-container').append(newQuestion);
       questionCounter++;
+      if (questionCounter > 1) {
+        $('#remove-button').show();
+      }
+    });
+
+    $('#remove-button').click(function() {
+      $('#question-container').children().last().remove();
+      questionCounter--;
+      if (questionCounter === 1) {
+        $('#remove-button').hide();
+      }
+      $('form').get(0).reset(); // Reset form validation
     });
   });
 </script>
